@@ -7,3 +7,6 @@
 /repository/target/
 /target/
 /use-case/target/
+/.bsp/
+/.idea/
+
