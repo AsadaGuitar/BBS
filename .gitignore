@@ -1,0 +1,9 @@
+# Project exclude paths
+/api/target/
+/domain/target/
+/interface/target/
+/project/project/target/
+/project/target/
+/repository/target/
+/target/
+/use-case/target/
