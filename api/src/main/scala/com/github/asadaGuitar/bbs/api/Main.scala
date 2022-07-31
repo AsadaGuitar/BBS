@@ -3,8 +3,9 @@ package com.github.asadaGuitar.bbs.api
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import com.github.asadaGuitar.bbs.interfaces.controllers.{ThreadsController, UsersController}
+import com.github.asadaGuitar.bbs.interfaces.controllers.{ExceptionHandlers, ThreadsController, UsersController}
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
 import com.github.asadaGuitar.bbs.interfaces.controllers.validations.RejectionHandlers
 import com.typesafe.config.Config
 
@@ -24,12 +25,14 @@ object Main extends App {
   val usersController  = new UsersController
   val threadController = new ThreadsController
 
-  val router =
-    handleRejections(RejectionHandlers.defaultRejectionHandler) {
-      usersController.signinRouter ~
-        usersController.signupRouter ~
-        usersController.userAccountRouter ~
-        threadController.threadRouter
+  val router: Route =
+    handleExceptions(ExceptionHandlers.defaultExceptionHandler) {
+      handleRejections(RejectionHandlers.defaultRejectionHandler) {
+        usersController.signinRouter ~
+          usersController.signupRouter ~
+          usersController.userAccountRouter ~
+          threadController.threadRouter
+      }
     }
 
   val bindingFuture =

@@ -5060,3 +5060,23 @@ date:2022-07-31 19:25:51	level: DEBUG	logger: slick.jdbc.StatementInvoker.result
 date:2022-07-31 19:25:51	level: DEBUG	logger: slick.jdbc.StatementInvoker.result              	message: \------------+------------+-----------+------------------+----------+----------+----------------------+-----------+----------/
 date:2022-07-31 19:25:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
 date:2022-07-31 19:26:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:26:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:27:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:27:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:28:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:28:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:29:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:29:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:30:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:30:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:31:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:31:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:32:23	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:32:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 19:33:15	level: INFO 	logger: akka.actor.CoordinatedShutdown                  	message: Running CoordinatedShutdown with reason [JvmExitReason]
+date:2022-07-31 19:33:24	level: INFO 	logger: akka.event.slf4j.Slf4jLogger                    	message: Slf4jLogger started
+date:2022-07-31 19:33:24	level: INFO 	logger: akka.actor.typed.ActorSystem                    	message: Server starting online http://localhost:9876/
+date:2022-07-31 19:33:32	level: INFO 	logger: akka.actor.CoordinatedShutdown                  	message: Running CoordinatedShutdown with reason [JvmExitReason]
+date:2022-07-31 19:34:16	level: INFO 	logger: akka.event.slf4j.Slf4jLogger                    	message: Slf4jLogger started
+date:2022-07-31 19:34:16	level: INFO 	logger: akka.actor.typed.ActorSystem                    	message: Server starting online http://localhost:9876/
+date:2022-07-31 19:34:22	level: INFO 	logger: akka.actor.CoordinatedShutdown                  	message: Running CoordinatedShutdown with reason [ActorSystemTerminateReason]
