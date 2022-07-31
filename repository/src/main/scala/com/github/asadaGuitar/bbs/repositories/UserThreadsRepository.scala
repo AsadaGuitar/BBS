@@ -7,7 +7,6 @@ import scala.concurrent.Future
 
 trait UserThreadsRepository {
 
-  // 要件番号【4】：スレッドに参加する他のユーザーアカウントを指定できる
   def save(userThreadsForm: UserThreadsForm): Future[Int]
 
   def findAllByUserId(userId: UserId): Future[List[ThreadId]]

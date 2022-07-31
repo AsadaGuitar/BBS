@@ -21,9 +21,6 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository,
     }
   }
 
-  /**
-   * Requirement No.4
-   */
   def create(postThreadForm: PostThreadForm): Future[ThreadId] ={
     postThreadForm match {
       case PostThreadForm(userId, title, otherUserIds) =>
@@ -39,9 +36,6 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository,
     }
   }
 
-  /**
-   * Requirement No.5
-   */
   def findAllByUserId(userId: UserId): Future[List[Thread]] =
     for {
       threadIds <- userThreadsRepository.findAllByUserId(userId)

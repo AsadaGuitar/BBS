@@ -2,14 +2,15 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "2.13.8"
 
-val akkaVersion        = "2.6.19"
-val akkaHttpVersion    = "10.2.9"
-val jwtAkkaHttpVersion = "1.4.4"
-val catsCoreVersion    = "2.7.0"
-val slickVersion       = "3.3.3"
-val logbackVersion     = "1.2.11"
-val postgresVersion    = "42.3.6"
-val scalaTestVersion   = "3.2.12"
+val akkaVersion               = "2.6.19"
+val akkaHttpVersion           = "10.2.9"
+val jwtAkkaHttpVersion        = "1.4.4"
+val catsCoreVersion           = "2.7.0"
+val slickVersion              = "3.3.3"
+val slickMigrationVersion     = "0.8.2"
+val logbackVersion            = "1.2.11"
+val postgresVersion           = "42.3.6"
+val scalaTestVersion          = "3.2.12"
 
 
 lazy val domain = (project in file("domain"))
@@ -106,8 +107,8 @@ lazy val tool = (project in file("tool"))
       "com.typesafe.slick"                   %% "slick"                          % slickVersion,
       "com.typesafe.slick"                   %% "slick-hikaricp"                 % slickVersion,
       "org.postgresql"                       %  "postgresql"                     % postgresVersion,
-      "com.typesafe.slick"                   %% "slick-codegen"                  % "3.3.3",
-      "io.github.nafg.slick-migration-api"   %% "slick-migration-api"            % "0.8.2",
+      "com.typesafe.slick"                   %% "slick-codegen"                  % slickVersion,
+      "io.github.nafg.slick-migration-api"   %% "slick-migration-api"            % slickMigrationVersion,
       "ch.qos.logback"                       %  "logback-classic"                % logbackVersion,
       "org.scalatest"                        %% "scalatest"                      % scalaTestVersion       % "test"
     )

@@ -19,9 +19,6 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
     }
   }
 
-  /**
-   * Requirement No.6
-   */
   def create(postMessageForm: PostMessageForm): Future[MessageId] ={
     postMessageForm match {
       case PostMessageForm(threadId, userId, text) =>
@@ -33,9 +30,6 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
     }
   }
 
-  /**
-   * Requirement No.7
-   */
   def findAllByThreadId(threadId: ThreadId): Future[List[Message]] =
     messagesRepository.findAllByThreadId(threadId)
 

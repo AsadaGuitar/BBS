@@ -18,9 +18,6 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     }
   }
 
-  /**
-   * Requirement No.1
-   */
   def signup(signupForm: SignupForm): Future[UserId] =
     signupForm match {
       case SignupForm(emailAddress, firstName, lastName, password) =>
@@ -31,10 +28,6 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
         } yield userId
     }
 
-
-  /**
-   * Requirement No.2
-   */
   def signin(signinForm: SigninForm)(generateToken: UserId => JwtToken): Future[Option[JwtToken]] =
     signinForm match {
       case SigninForm(userId, password) =>
@@ -49,9 +42,5 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
         }
     }
 
-  /**
-   * Requirement No.3
-   */
   def findById(userId: UserId): Future[Option[User]] = userRepository.findById(userId)
-
 }
