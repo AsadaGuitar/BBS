@@ -10,23 +10,23 @@ object ErrorResponse extends MessageProvider {
 
   private def getErrorResponseByCode(code: String) = ErrorResponse(code, config.getString(code))
 
-  final val signinFailure                = getErrorResponseByCode("3")
+  final val signinFailure                = getErrorResponseByCode("1111")
 
-  final val userIdValidationError        = getErrorResponseByCode("")
+  final val userIdValidationError        = getErrorResponseByCode("1111")
 
-  final val userFirstNameValidationError = getErrorResponseByCode("")
+  final val userFirstNameValidationError = getErrorResponseByCode("1111")
 
-  final val userLastNameValidationError  = getErrorResponseByCode("")
+  final val userLastNameValidationError  = getErrorResponseByCode("1111")
 
-  final val userPasswordValidationError  = getErrorResponseByCode("")
+  final val userPasswordValidationError  = getErrorResponseByCode("1111")
 
-  final val emailAddressValidationError  = getErrorResponseByCode("")
+  final val emailAddressValidationError  = getErrorResponseByCode("1111")
 
-  final val threadIdValidationError      = getErrorResponseByCode("")
+  final val threadIdValidationError      = getErrorResponseByCode("1111")
 
-  final val threadTitleValidationError   = getErrorResponseByCode("")
+  final val threadTitleValidationError   = getErrorResponseByCode("1111")
 
-  final val notFoundUser                 = getErrorResponseByCode("")
+  final val notFoundUser                 = getErrorResponseByCode("1111")
 
-  final val messageTextValidationError   = getErrorResponseByCode("")
+  final val messageTextValidationError   = getErrorResponseByCode("1111")
 }

@@ -1,6 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import akka.actor.typed.ActorSystem
+import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -12,6 +12,7 @@ import com.github.asadaGuitar.bbs.usecases.UsersUseCase
 import com.typesafe.config.Config
 
 import scala.concurrent.ExecutionContext
+import scala.language.postfixOps
 import scala.util.{Failure, Success}
 
 

@@ -2,11 +2,12 @@ package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
 import cats.Functor
 import com.github.asadaGuitar.bbs.domains.models.{Thread, ThreadId, ThreadTitle, UserId}
+import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.ThreadsRepository
 import com.github.asadaGuitar.bbs.repositories.models.ThreadForm
 
-import java.sql.Date
-import java.util.{Date => UtilDate}
+import java.sql.Timestamp
+import java.util.Date
 import scala.concurrent.{ExecutionContext, Future}
 
 final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends ThreadsRepository with SlickDbConfigProvider {
@@ -16,9 +17,14 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends Th
   override def save(threadForm: ThreadForm): Future[Int] = threadForm match {
     case ThreadForm(id, userId, title) =>
       dbConfig.db.run {
-        ThreadsTable.table
+        Tables.Threads
           .insertOrUpdate {
-            ThreadsRecord(id = id.value, userId = userId.value, title = title.value)
+            Tables.ThreadsRow(
+              id = id.value,
+              userId = userId.value,
+              title = title.value,
+              createAt = new Timestamp(new Date().getTime)
+            )
           }
       }
   }
@@ -26,28 +32,28 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends Th
   override def findById(threadId: ThreadId): Future[Option[Thread]] =
     convertThreadRecordToThead {
       dbConfig.db.run {
-        ThreadsTable.table.filter(thread => thread.id === threadId.value && !thread.isClose).result.headOption
+        Tables.Threads.filter(thread => thread.id === threadId.value && !thread.isClose).result.headOption
       }
     }
 
   override def findAllByUserId(userId: UserId): Future[List[Thread]] =
     convertThreadRecordToThead {
       dbConfig.db.run {
-        ThreadsTable.table.filter(thread => thread.userId === userId.value && !thread.isClose).result
+        Tables.Threads.filter(thread => thread.userId === userId.value && !thread.isClose).result
       }
     }.map(_.toList)
 
   override def existsById(threadId: ThreadId): Future[Boolean] =
     dbConfig.db.run {
-      ThreadsTable.table.filter(thread => thread.id === threadId.value && !thread.isClose).exists.result
+      Tables.Threads.filter(thread => thread.id === threadId.value && !thread.isClose).exists.result
     }
 
-  private def convertThreadRecordToThead[F[_]](threadsRecord: Future[F[ThreadsRecord]])
+  private def convertThreadRecordToThead[F[_]](threadsRow: Future[F[Tables.ThreadsRow]])
                                               (implicit fa: Functor[F]): Future[F[Thread]] =
     for {
-      record <- threadsRecord
+      record <- threadsRow
     } yield fa.map(record) {
-      case ThreadsRecord(id, userId, title, isClose, createAt, modifyAt, closeAt) =>
+      case Tables.ThreadsRow(id, userId, title, isClose, createAt, modifyAt, closeAt) =>
         Thread(
           id = ThreadId(id),
           userId = UserId(userId),
@@ -59,47 +65,3 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends Th
         )
     }
 }
-
-private[adaptors] case class ThreadsRecord(id: String,
-                                           userId: String,
-                                           title: String,
-                                           isClose: Boolean = false,
-                                           createAt: Date = {
-                                             val now = new UtilDate()
-                                             new Date(now.getTime)
-                                           },
-                                           modifyAt: Option[Date] = None,
-                                           closeAt: Option[Date] = None)
-
-private[adaptors] object ThreadsTable extends SlickDbConfigProvider {
-  import dbConfig.profile.api._
-
-  val table = TableQuery[ThreadsTable]
-
-  private[adaptors] class ThreadsTable(tag: Tag) extends Table[ThreadsRecord](tag, "threads") {
-    def id = column[String]("id")
-
-    def userId = column[String]("user_id")
-
-    def title = column[String]("title")
-
-    def isClose = column[Boolean]("is_close")
-
-    def createAt = column[java.sql.Date]("create_at")
-
-    def modifyAt = column[Option[java.sql.Date]]("modify_at")
-
-    def closeAt = column[Option[java.sql.Date]]("close_at")
-
-    def supplier =
-      foreignKey("user_threads_pk", userId, ThreadsTable.table)(
-        _.id, onUpdate = ForeignKeyAction.NoAction, onDelete = ForeignKeyAction.NoAction
-      )
-
-    override def * =
-      (id, userId, title, isClose, createAt, modifyAt, closeAt) <>
-        ((ThreadsRecord.apply _).tupled, ThreadsRecord.unapply)
-  }
-}
-
-

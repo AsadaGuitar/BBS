@@ -5,5 +5,5 @@ import slick.jdbc.PostgresProfile
 
 private[adaptors] trait SlickDbConfigProvider {
 
-  protected val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("db.slick")
+  protected val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfig.forConfig("slick")
 }
