@@ -126,6 +126,7 @@ $ curl -X GET \
   [{"message":"hello world.","message_id":"q4gOp9lFM8GoH7H"}] # return thread's messages.
 ```
 
-
-
+## The following projects were referenced
+Special thanks !!
++ https://github.com/j5ik2o/akka-ddd-cqrs-es-example
 
