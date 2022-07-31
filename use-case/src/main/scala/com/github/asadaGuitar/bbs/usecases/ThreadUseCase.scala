@@ -9,8 +9,7 @@ import com.github.asadaGuitar.bbs.usecases.models.PostThreadForm
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-final class ThreadUseCase(threadsRepository: ThreadsRepository,
-                          userThreadsRepository: UserThreadsRepository)
+final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepository: UserThreadsRepository)
                          (implicit ec: ExecutionContext) {
 
   private def generateRandomThreadId(randomString: String = Random.alphanumeric.take(12).mkString): Future[ThreadId] ={
@@ -28,7 +27,7 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository,
           threadId <- generateRandomThreadId()
           threadForm = ThreadForm(threadId, userId, title)
           _ <- threadsRepository.save(threadForm)
-          _ <- otherUserIds.map{ otherUserId =>
+          _ <- (userId +: otherUserIds).map{ otherUserId =>
             val userThreadsForm = UserThreadsForm(otherUserId, threadId)
             userThreadsRepository.save(userThreadsForm)
           }.sequence

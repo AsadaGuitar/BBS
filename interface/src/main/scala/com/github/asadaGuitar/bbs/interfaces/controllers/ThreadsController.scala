@@ -60,35 +60,36 @@ final class ThreadsController(implicit system: ActorSystem[_]) extends Validatio
         }
       } ~ pathPrefix(Segment) { threadIdRequest =>
         validateThreadId(threadIdRequest) { threadId =>
-          // validation
-          pathSuffixTest("messages") {
-            authenticate { userId =>
-              post {
-                entity(as[PostMessageRequestForm]) { postMessageRequestForm =>
-                  validatePostMessageRequestForm(postMessageRequestForm) { messageText =>
-                    val postMessageForm = PostMessageForm(threadId, userId, messageText)
-                    onComplete(messageUseCase.create(postMessageForm)) {
-                      case Success(messageId) =>
-                        complete(PostMessageSucceedResponse(messageId.value))
+          pathPrefix("messages") {
+            pathEndOrSingleSlash {
+              authenticate { userId =>
+                post {
+                  entity(as[PostMessageRequestForm]) { postMessageRequestForm =>
+                    validatePostMessageRequestForm(postMessageRequestForm) { messageText =>
+                      val postMessageForm = PostMessageForm(threadId, userId, messageText)
+                      onComplete(messageUseCase.create(postMessageForm)) {
+                        case Success(messageId) =>
+                          complete(PostMessageSucceedResponse(messageId.value))
+                        case Failure(exception) =>
+                          system.log.error(s"A database error occurred during post message. ${exception.getMessage}")
+                          throw exception
+                      }
+                    }
+                  }
+                } ~
+                  get {
+                    onComplete(messageUseCase.findAllByThreadId(threadId)) {
+                      case Success(messageList) =>
+                        val messageResponseList = messageList.map {
+                          case Message(id, _, _, text, _, _, _, _) => MessageResponse(id.value, text.value)
+                        }
+                        complete(messageResponseList)
                       case Failure(exception) =>
                         system.log.error(s"A database error occurred during post message. ${exception.getMessage}")
                         throw exception
                     }
                   }
-                }
-              } ~
-                get {
-                  onComplete(messageUseCase.findAllByThreadId(threadId)) {
-                    case Success(messageList) =>
-                      val messageResponseList = messageList.map {
-                        case Message(id, _, _, text, _, _, _, _) => MessageResponse(id.value, text.value)
-                      }
-                      complete(messageResponseList)
-                    case Failure(exception) =>
-                      system.log.error(s"A database error occurred during post message. ${exception.getMessage}")
-                      throw exception
-                  }
-                }
+              }
             }
           }
         }

@@ -5,5 +5,4 @@ import com.typesafe.config.{Config, ConfigFactory}
 trait MessageProvider {
 
   protected val config: Config = ConfigFactory.load("message")
-
 }

@@ -54,5 +54,4 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends Slic
 
   override def existsById(userId: UserId): Future[Boolean] =
     dbConfig.db.run(Tables.Users.filter(_.id === userId.value).exists.result)
-
 }

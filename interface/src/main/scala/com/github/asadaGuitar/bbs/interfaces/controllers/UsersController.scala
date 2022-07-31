@@ -1,6 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
+import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -14,7 +14,6 @@ import com.typesafe.config.Config
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 import scala.util.{Failure, Success}
-
 
 final class UsersController(implicit system: ActorSystem[_]) extends ValidationDirectives with JwtAuthenticator with Marshaller {
 
@@ -68,18 +67,20 @@ final class UsersController(implicit system: ActorSystem[_]) extends ValidationD
     pathPrefix("user_account" / Segment) { requestUserId =>
       validateUserId(requestUserId) { otherUserId =>
         authenticate { _ =>
-          onComplete(usersUseCase.findById(otherUserId)) {
-            case Success(user) => user match {
-              case Some(user) => user match {
-                case User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) if !isClose =>
-                  complete(FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value))
-                case _ => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
+          get {
+            onComplete(usersUseCase.findById(otherUserId)) {
+              case Success(user) => user match {
+                case Some(user) => user match {
+                  case User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) if !isClose =>
+                    complete(FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value))
+                  case _ => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
+                }
+                case None => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
               }
-              case None => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
+              case Failure(exception) =>
+                system.log.error(s"A database error occurred during find user by id. ${exception.getMessage}")
+                throw exception
             }
-            case Failure(exception) =>
-              system.log.error(s"A database error occurred during find user by id. ${exception.getMessage}")
-              throw exception
           }
         }
       }

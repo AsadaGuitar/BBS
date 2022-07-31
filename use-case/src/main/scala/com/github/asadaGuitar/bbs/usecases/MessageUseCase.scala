@@ -8,7 +8,6 @@ import com.github.asadaGuitar.bbs.usecases.models.PostMessageForm
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-
 final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: ExecutionContext) {
 
   private def generateRandomMessageId(randomString: String = Random.alphanumeric.take(15).mkString): Future[MessageId] ={
@@ -32,5 +31,4 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
 
   def findAllByThreadId(threadId: ThreadId): Future[List[Message]] =
     messagesRepository.findAllByThreadId(threadId)
-
 }

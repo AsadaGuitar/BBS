@@ -13,7 +13,7 @@ trait JwtAuthenticator extends Marshaller {
     override lazy val jwtConfig: JwtConfig = new JwtConfig(config)
   }
 
-  def generateToken(userId: UserId): JwtToken = JwtToken(jwtAuth.generateToken(userId.value))
+  def generateToken(userId: UserId): JwtToken = JwtToken(jwtAuth.generateToken(userId))
 
   def authenticate: Directive1[UserId] =
     jwtAuth.jwtAuthenticate(jwtAuth.as[UserId])

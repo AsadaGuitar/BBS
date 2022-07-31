@@ -2,7 +2,6 @@ package com.github.asadaGuitar.bbs.domains.models
 
 import java.util.Date
 
-
 final case class Thread(id: ThreadId,
                         userId: UserId,
                         title: ThreadTitle,
