@@ -84,7 +84,46 @@ $ curl -X POST \
   -d '{"user_id":"qaZSzBfLia", "password": "password"}' \
   http://${host}:${port}/signin
   
-  {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNjMzMDYscWFaU3pCZkxpYX0.d02w_dLCLh4gHXmZW2WtuWpJNm8jUhb8qtPh0K2oHGo"} # return access token.
+  {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90"} # return access token.
+  
+# find user by user id.
+$ curl -X GET \
+  -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90' \
+  http://localhost:9876/user_account/ZA91VCAsrS     
+  
+  {"email_address":"info@example.com","first_name":"asada","last_name":"guitar","user_account_id":"ZA91VCAsrS"} # return user info.
+  
+# create thread.
+$ curl -X POST \
+  -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90' \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"about scala.", "others":[]}' \
+  http://localhost:9876/threads/
+  
+  {"thread_id":"kHhsGFih4Va4"} # return thread id.
+  
+# find all users threads.
+$ curl -X GET \
+  -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90' \
+  http://localhost:9876/threads/
+  
+  [{"thread_id":"kHhsGFih4Va4","title":"about scala."}] # return thread id list which the user is joining.
+  
+# post message.
+$ curl -X POST \
+  -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90' \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"hello world."}' \      
+  http://localhost:9876/threads/kHhsGFih4Va4/messages
+  
+  {"message_id":"q4gOp9lFM8GoH7H"} # return message id.
+  
+# find all thread messages.
+$ curl -X GET \ 
+  -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTkyNzgyMzYsInZhbHVlIjoiWkE5MVZDQXNyUyJ9.aCVYJyzUFrZ2y8eunA7RF9yfoPb_DC0sIvEktuZFg90' \
+  http://localhost:9876/threads/kHhsGFih4Va4/messages
+  
+  [{"message":"hello world.","message_id":"q4gOp9lFM8GoH7H"}] # return thread's messages.
 ```
 
 
