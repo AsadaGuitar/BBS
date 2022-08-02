@@ -11861,3 +11861,81 @@ date:2022-07-31 23:39:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool 
 date:2022-07-31 23:39:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
 date:2022-07-31 23:40:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
 date:2022-07-31 23:40:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:41:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:41:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:42:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:42:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:43:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:43:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:44:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:44:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:45:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:45:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:46:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:46:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:47:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:47:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:48:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:48:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:49:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:49:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:50:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:50:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:51:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:51:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:52:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:52:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:53:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:53:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:54:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:54:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:55:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:55:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:56:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:56:27	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@2d2f63c1: (connection has passed maxLifetime)
+date:2022-07-31 23:56:27	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@25f587ce
+date:2022-07-31 23:56:28	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@6381f642: (connection has passed maxLifetime)
+date:2022-07-31 23:56:28	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@2b326d00
+date:2022-07-31 23:56:30	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@66af706d: (connection has passed maxLifetime)
+date:2022-07-31 23:56:30	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@2f0decbe
+date:2022-07-31 23:56:33	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@fd171bb: (connection has passed maxLifetime)
+date:2022-07-31 23:56:33	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@6a0f673b
+date:2022-07-31 23:56:34	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@164e7864: (connection has passed maxLifetime)
+date:2022-07-31 23:56:34	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@63cd5643
+date:2022-07-31 23:56:34	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@6e92f0e: (connection has passed maxLifetime)
+date:2022-07-31 23:56:34	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@5b2f6d57
+date:2022-07-31 23:56:36	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@551f68fd: (connection has passed maxLifetime)
+date:2022-07-31 23:56:36	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@1b070290
+date:2022-07-31 23:56:37	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@27cbfb42: (connection has passed maxLifetime)
+date:2022-07-31 23:56:37	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@a209874
+date:2022-07-31 23:56:39	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@a28374b: (connection has passed maxLifetime)
+date:2022-07-31 23:56:39	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@356b83d
+date:2022-07-31 23:56:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:56:42	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@3c9282a2: (connection has passed maxLifetime)
+date:2022-07-31 23:56:42	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@23b338d5
+date:2022-07-31 23:56:43	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@12e44d4d: (connection has passed maxLifetime)
+date:2022-07-31 23:56:43	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@3adb1
+date:2022-07-31 23:56:44	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@73758b6: (connection has passed maxLifetime)
+date:2022-07-31 23:56:44	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@e6e66fd
+date:2022-07-31 23:56:44	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@77fbe93a: (connection has passed maxLifetime)
+date:2022-07-31 23:56:44	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@38cfa05d
+date:2022-07-31 23:56:51	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@2e462ae3: (connection has passed maxLifetime)
+date:2022-07-31 23:56:51	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@363902dd
+date:2022-07-31 23:56:53	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@1e789443: (connection has passed maxLifetime)
+date:2022-07-31 23:56:53	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@38feea6a
+date:2022-07-31 23:56:57	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@64f926e6: (connection has passed maxLifetime)
+date:2022-07-31 23:56:57	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@3cc169ad
+date:2022-07-31 23:57:01	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@59b62027: (connection has passed maxLifetime)
+date:2022-07-31 23:57:01	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@79c3e051
+date:2022-07-31 23:57:04	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@62778931: (connection has passed maxLifetime)
+date:2022-07-31 23:57:05	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@7922a5e
+date:2022-07-31 23:57:05	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@bff4d6e: (connection has passed maxLifetime)
+date:2022-07-31 23:57:05	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@48f03d7c
+date:2022-07-31 23:57:10	level: DEBUG	logger: com.zaxxer.hikari.pool.PoolBase                 	message: slick.db - Closing connection org.postgresql.jdbc.PgConnection@1e469611: (connection has passed maxLifetime)
+date:2022-07-31 23:57:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Added connection org.postgresql.jdbc.PgConnection@f5d996b
+date:2022-07-31 23:57:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:57:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:58:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:58:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:59:10	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)
+date:2022-07-31 23:59:40	level: DEBUG	logger: com.zaxxer.hikari.pool.HikariPool               	message: slick.db - Pool stats (total=20, active=0, idle=20, waiting=0)

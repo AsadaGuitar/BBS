@@ -2,9 +2,10 @@ package com.github.asadaGuitar.bbs.tool
 
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.SlickDbConfigProvider
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
+
 import slick.migration.api._
 
-object MigrationApi extends SlickDbConfigProvider {
+object MigrationApi extends App with SlickDbConfigProvider {
   implicit val dialect: PostgresDialect = new PostgresDialect
 
   val usersInit =

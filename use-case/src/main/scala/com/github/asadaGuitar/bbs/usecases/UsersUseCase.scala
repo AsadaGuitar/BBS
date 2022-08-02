@@ -22,7 +22,8 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     val SignupForm(emailAddress, firstName, lastName, password) = signupForm
     for {
       userId <- generateRandomUserId()
-      userForm = UserForm(userId, emailAddress, firstName, lastName, password)
+      bcryptedPassword <- password.bcryptBoundedFuture
+      userForm = UserForm(userId, emailAddress, firstName, lastName, bcryptedPassword)
       _ <- userRepository.save(userForm)
     } yield userId
   }
@@ -31,9 +32,10 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     val SigninForm(userId, password) = signinForm
     for {
       user <- userRepository.findById(userId)
+      bcryptedPassword <- password.bcryptBoundedFuture
     } yield {
       user.flatMap {
-        case foundUser if foundUser.password.equals(password) =>
+        case foundUser if foundUser.password.equals(bcryptedPassword) =>
           Some(generateToken(userId))
         case _ => None
       }
