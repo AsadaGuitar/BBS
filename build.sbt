@@ -126,7 +126,7 @@ lazy val tool = (project in file("tool"))
       "ch.qos.logback"                      % "logback-classic"     % logbackVersion,
       "org.scalatest"                      %% "scalatest"           % scalaTestVersion % Test
     )
-  )
+  ).dependsOn(interface)
 
 lazy val root = (project in file("."))
   .settings(baseSettings)
