@@ -1,10 +1,16 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers.validations
 
 import akka.http.scaladsl.server.Directive1
-import akka.http.scaladsl.server.Directives.{provide, reject}
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{PostMessageRequestForm, PostThreadFormWithoutUserId, PostThreadRequestForm, SigninRequestForm, SignupRequestForm}
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, MessageText, ThreadId, UserId, UserName, UserPassword}
-import com.github.asadaGuitar.bbs.usecases.models.{SigninForm, SignupForm}
+import akka.http.scaladsl.server.Directives.{ provide, reject }
+import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
+  PostMessageRequestForm,
+  PostThreadFormWithoutUserId,
+  PostThreadRequestForm,
+  SigninRequestForm,
+  SignupRequestForm
+}
+import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, MessageText, ThreadId, UserId, UserName, UserPassword }
+import com.github.asadaGuitar.bbs.usecases.models.{ SigninForm, SignupForm }
 
 trait ValidationDirectives {
 
@@ -38,4 +44,3 @@ trait ValidationDirectives {
   protected def validatePostMessageRequestForm(value: PostMessageRequestForm): Directive1[MessageText] =
     Validations.validatePostMessageForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 }
-

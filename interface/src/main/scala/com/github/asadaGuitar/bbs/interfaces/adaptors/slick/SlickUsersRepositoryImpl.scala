@@ -7,13 +7,14 @@ import com.github.asadaGuitar.bbs.domains.models.{
   UserName,
   UserPassword
 }
+import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 import com.github.asadaGuitar.bbs.repositories.models.UserForm
 
 import java.sql.Timestamp
 import java.util.Date
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext)
     extends SlickDbConfigProvider
