@@ -35,11 +35,11 @@ final class ThreadsController(implicit system: ActorSystem[_])
   override implicit val config: Config = system.settings.config
 
   private val userThreadsRepository = new SlickUserThreadsRepositoryImpl
+  private val messageRepository     = new SlickMessagesRepositoryImpl
   private val threadsRepository     = new SlickThreadsRepositoryImpl
-  private val threadUseCase         = new ThreadUseCase(threadsRepository, userThreadsRepository)
 
-  private val messageRepository = new SlickMessagesRepositoryImpl
-  private val messageUseCase    = new MessageUseCase(messageRepository)
+  private val threadUseCase  = new ThreadUseCase(threadsRepository, userThreadsRepository)
+  private val messageUseCase = new MessageUseCase(messageRepository)
 
   val threadRouter: Route =
     pathPrefix("threads") {
@@ -47,16 +47,16 @@ final class ThreadsController(implicit system: ActorSystem[_])
         authenticate { userId =>
           post {
             entity(as[PostThreadRequestForm]) { postThreadRequestForm =>
-              validatePostThreadRequestForm(postThreadRequestForm) {
-                case PostThreadFormWithoutUserId(title, otherUserIds) =>
-                  val postThreadForm = PostThreadForm(userId, title, otherUserIds)
-                  onComplete(threadUseCase.create(postThreadForm)) {
-                    case Success(threadId) =>
-                      complete(PostThreadSucceededResponse(threadId.value))
-                    case Failure(exception) =>
-                      system.log.error(s"A database error occurred during post thread. ${exception.getMessage}")
-                      throw exception
-                  }
+              validatePostThreadRequestForm(postThreadRequestForm) { postThreadRequestFormWithoutUserId =>
+                val PostThreadFormWithoutUserId(title, otherUserIds) = postThreadRequestFormWithoutUserId
+                val postThreadForm                                   = PostThreadForm(userId, title, otherUserIds)
+                onComplete(threadUseCase.create(postThreadForm)) {
+                  case Success(threadId) =>
+                    complete(PostThreadSucceededResponse(threadId.value))
+                  case Failure(exception) =>
+                    system.log.error(s"A database error occurred during post thread. ${exception.getMessage}")
+                    throw exception
+                }
               }
             }
           } ~

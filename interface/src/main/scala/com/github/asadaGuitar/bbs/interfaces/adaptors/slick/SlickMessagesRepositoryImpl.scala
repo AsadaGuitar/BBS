@@ -16,25 +16,30 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
 
   import dbConfig.profile.api._
 
-  override def save(messageForm: MessageForm): Future[Int] = messageForm match {
-    case MessageForm(id, threadId, userId, text) =>
-      dbConfig.db.run {
-        Tables.Messages.insertOrUpdate {
-          Tables.MessagesRow(
-            id = id.value,
-            threadId = threadId.value,
-            userId = userId.value,
-            text = text.value,
-            createAt = new Timestamp(new util.Date().getTime)
-          )
-        }
+  override def save(messageForm: MessageForm): Future[Int] = {
+    val MessageForm(id, threadId, userId, text) = messageForm
+    dbConfig.db.run {
+      Tables.Messages.insertOrUpdate {
+        Tables.MessagesRow(
+          id = id.value,
+          threadId = threadId.value,
+          userId = userId.value,
+          text = text.value,
+          createAt = new Timestamp(new util.Date().getTime)
+        )
       }
+    }
   }
 
   override def findAllByThreadId(threadId: ThreadId): Future[List[Message]] =
     for {
-      record <- dbConfig.db.run(Tables.Messages.filter(_.threadId === threadId.value).result)
-    } yield record.map { case Tables.MessagesRow(id, threadId, userId, text, isClose, createAt, modifyAt, closeAt) =>
+      rows <- dbConfig.db.run {
+        Tables.Messages
+          .filter(_.threadId === threadId.value)
+          .result
+      }
+    } yield rows.map { row =>
+      val Tables.MessagesRow(id, threadId, userId, text, isClose, createAt, modifyAt, closeAt) = row
       models.Message(
         id = MessageId(id),
         threadId = ThreadId(threadId),
@@ -48,5 +53,10 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
     }.toList
 
   override def existsById(messageId: MessageId): Future[Boolean] =
-    dbConfig.db.run(Tables.Messages.filter(_.id === messageId.value).exists.result)
+    dbConfig.db.run {
+      Tables.Messages
+        .filter(_.id === messageId.value)
+        .exists
+        .result
+    }
 }

@@ -82,12 +82,13 @@ final class UsersController(implicit system: ActorSystem[_])
               case Success(user) =>
                 user match {
                   case Some(user) =>
-                    user match {
-                      case User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) if !isClose =>
-                        complete(
-                          FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value)
-                        )
-                      case _ => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
+                    val User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) = user
+                    if (!isClose) {
+                      complete(
+                        FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value)
+                      )
+                    } else {
+                      complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
                     }
                   case None => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
                 }

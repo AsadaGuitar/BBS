@@ -15,20 +15,20 @@ final class SlickUserThreadsRepositoryImpl(implicit ec: ExecutionContext)
 
   import dbConfig.profile.api._
 
-  override def save(userThreadsForm: UserThreadsForm): Future[Int] =
-    userThreadsForm match {
-      case UserThreadsForm(userId, threadId) =>
-        dbConfig.db.run {
-          Tables.UserThreads.insertOrUpdate {
-            Tables.UserThreadsRow(
-              id = 0,
-              userId = userId.value,
-              threadId = threadId.value,
-              createAt = new Timestamp(new Date().getTime)
-            )
-          }
+  override def save(userThreadsForm: UserThreadsForm): Future[Int] = {
+    val UserThreadsForm(userId, threadId) = userThreadsForm
+    dbConfig.db.run {
+      Tables.UserThreads
+        .insertOrUpdate {
+          Tables.UserThreadsRow(
+            id = 0,
+            userId = userId.value,
+            threadId = threadId.value,
+            createAt = new Timestamp(new Date().getTime)
+          )
         }
     }
+  }
 
   override def findAllByUserId(userId: UserId): Future[List[ThreadId]] =
     dbConfig.db

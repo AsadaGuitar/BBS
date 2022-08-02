@@ -64,23 +64,21 @@ object Validations {
         ErrorResponse.userPasswordValidationError.invalidNel
     }
 
-  def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupForm] =
-    value match {
-      case SignupRequestForm(first_name, last_name, email_address, password) =>
-        (
-          validateEmailAddress(email_address),
-          validateUserFirstName(first_name),
-          validateUserLastName(last_name),
-          validateUserPassword(password)
-        ).mapN(SignupForm)
-    }
+  def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupForm] = {
+    val SignupRequestForm(first_name, last_name, email_address, password) = value
+    (
+      validateEmailAddress(email_address),
+      validateUserFirstName(first_name),
+      validateUserLastName(last_name),
+      validateUserPassword(password)
+    ).mapN(SignupForm)
+  }
 
-  def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninForm] =
-    value match {
-      case SigninRequestForm(email_address, password) =>
-        (validateUserId(email_address), validateUserPassword(password))
-          .mapN(SigninForm)
-    }
+  def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninForm] = {
+    val SigninRequestForm(email_address, password) = value
+    (validateUserId(email_address), validateUserPassword(password))
+      .mapN(SigninForm)
+  }
 
   def validateThreadTitle(value: String): ValidatedNel[ErrorResponse, ThreadTitle] =
     try {
@@ -114,16 +112,14 @@ object Validations {
         ErrorResponse.messageTextValidationError.invalidNel
     }
 
-  def validatePostThreadForm(value: PostThreadRequestForm): ValidatedNel[ErrorResponse, PostThreadFormWithoutUserId] =
-    value match {
-      case PostThreadRequestForm(title, ids) =>
-        (validateThreadTitle(title), ids.map(validateUserIdRequest).sequence)
-          .mapN(PostThreadFormWithoutUserId)
-    }
+  def validatePostThreadForm(value: PostThreadRequestForm): ValidatedNel[ErrorResponse, PostThreadFormWithoutUserId] = {
+    val PostThreadRequestForm(title, ids) = value
+    (validateThreadTitle(title), ids.map(validateUserIdRequest).sequence)
+      .mapN(PostThreadFormWithoutUserId)
+  }
 
-  def validatePostMessageForm(value: PostMessageRequestForm): ValidatedNel[ErrorResponse, MessageText] =
-    value match {
-      case PostMessageRequestForm(message) =>
-        validateMessageText(message)
-    }
+  def validatePostMessageForm(value: PostMessageRequestForm): ValidatedNel[ErrorResponse, MessageText] = {
+    val PostMessageRequestForm(message) = value
+    validateMessageText(message)
+  }
 }
