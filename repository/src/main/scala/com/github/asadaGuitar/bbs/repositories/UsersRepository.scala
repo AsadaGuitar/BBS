@@ -1,6 +1,6 @@
 package com.github.asadaGuitar.bbs.repositories
 
-import com.github.asadaGuitar.bbs.domains.models.{User, UserId}
+import com.github.asadaGuitar.bbs.domains.models.{ User, UserId }
 import com.github.asadaGuitar.bbs.repositories.models.UserForm
 
 import scala.concurrent.Future

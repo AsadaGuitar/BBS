@@ -1,16 +1,18 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
 import cats.Functor
-import com.github.asadaGuitar.bbs.domains.models.{Thread, ThreadId, ThreadTitle, UserId}
+import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, ThreadTitle, UserId }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.ThreadsRepository
 import com.github.asadaGuitar.bbs.repositories.models.ThreadForm
 
 import java.sql.Timestamp
 import java.util.Date
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends ThreadsRepository with SlickDbConfigProvider {
+final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
+    extends ThreadsRepository
+    with SlickDbConfigProvider {
 
   import dbConfig.profile.api._
 
@@ -48,20 +50,20 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext) extends Th
       Tables.Threads.filter(thread => thread.id === threadId.value && !thread.isClose).exists.result
     }
 
-  private def convertThreadRecordToThead[F[_]](threadsRow: Future[F[Tables.ThreadsRow]])
-                                              (implicit fa: Functor[F]): Future[F[Thread]] =
+  private def convertThreadRecordToThead[F[_]](
+      threadsRow: Future[F[Tables.ThreadsRow]]
+  )(implicit fa: Functor[F]): Future[F[Thread]] =
     for {
       record <- threadsRow
-    } yield fa.map(record) {
-      case Tables.ThreadsRow(id, userId, title, isClose, createAt, modifyAt, closeAt) =>
-        Thread(
-          id = ThreadId(id),
-          userId = UserId(userId),
-          title = ThreadTitle(title),
-          isClose = isClose,
-          createAt = createAt,
-          modifyAt = modifyAt,
-          closeAt = closeAt
-        )
+    } yield fa.map(record) { case Tables.ThreadsRow(id, userId, title, isClose, createAt, modifyAt, closeAt) =>
+      Thread(
+        id = ThreadId(id),
+        userId = UserId(userId),
+        title = ThreadTitle(title),
+        isClose = isClose,
+        createAt = createAt,
+        modifyAt = modifyAt,
+        closeAt = closeAt
+      )
     }
 }

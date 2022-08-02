@@ -8,11 +8,10 @@ import akka.http.scaladsl.server.ExceptionHandler
 object ExceptionHandlers {
 
   final def defaultExceptionHandler(implicit system: ActorSystem[_]): ExceptionHandler =
-    ExceptionHandler {
-      case e: Throwable =>
-        extractUri { uri =>
-          system.log.error(s"Request to $uri could not be handled normally. exception was thrown. ${e.getMessage}")
-          complete(InternalServerError)
-        }
+    ExceptionHandler { case e: Throwable =>
+      extractUri { uri =>
+        system.log.error(s"Request to $uri could not be handled normally. exception was thrown. ${e.getMessage}")
+        complete(InternalServerError)
+      }
     }
 }

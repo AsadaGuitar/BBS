@@ -1,11 +1,26 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers.validations
 
 import cats.data.ValidatedNel
-import cats.implicits.{catsSyntaxTuple2Semigroupal, catsSyntaxTuple4Semigroupal, catsSyntaxValidatedId, toTraverseOps}
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{ErrorResponse, PostMessageRequestForm, PostThreadFormWithoutUserId, PostThreadRequestForm, SigninRequestForm, SignupRequestForm, UserIdRequest}
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, MessageText, ThreadId, ThreadTitle, UserId, UserName, UserPassword}
+import cats.implicits.{ catsSyntaxTuple2Semigroupal, catsSyntaxTuple4Semigroupal, catsSyntaxValidatedId, toTraverseOps }
+import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
+  ErrorResponse,
+  PostMessageRequestForm,
+  PostThreadFormWithoutUserId,
+  PostThreadRequestForm,
+  SigninRequestForm,
+  SignupRequestForm,
+  UserIdRequest
+}
+import com.github.asadaGuitar.bbs.domains.models.{
+  EmailAddress,
+  MessageText,
+  ThreadId,
+  ThreadTitle,
+  UserId,
+  UserName,
+  UserPassword
+}
 import com.github.asadaGuitar.bbs.usecases.models._
-
 
 object Validations {
 
@@ -42,7 +57,7 @@ object Validations {
     }
 
   def validateUserPassword(value: String): ValidatedNel[ErrorResponse, UserPassword] =
-    try{
+    try {
       UserPassword(value).validNel
     } catch {
       case _: IllegalArgumentException =>
@@ -52,10 +67,12 @@ object Validations {
   def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupForm] =
     value match {
       case SignupRequestForm(first_name, last_name, email_address, password) =>
-        (validateEmailAddress(email_address),
+        (
+          validateEmailAddress(email_address),
           validateUserFirstName(first_name),
           validateUserLastName(last_name),
-          validateUserPassword(password)).mapN(SignupForm)
+          validateUserPassword(password)
+        ).mapN(SignupForm)
     }
 
   def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninForm] =

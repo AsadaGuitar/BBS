@@ -3,7 +3,7 @@ package com.github.asadaGuitar.bbs.api
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import com.github.asadaGuitar.bbs.interfaces.controllers.{ExceptionHandlers, ThreadsController, UsersController}
+import com.github.asadaGuitar.bbs.interfaces.controllers.{ ExceptionHandlers, ThreadsController, UsersController }
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.github.asadaGuitar.bbs.interfaces.controllers.validations.RejectionHandlers
@@ -12,6 +12,7 @@ import com.typesafe.config.Config
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.DurationInt
 import scala.io.StdIn
+import scala.concurrent.Future
 
 object Main extends App {
 
@@ -19,8 +20,8 @@ object Main extends App {
   implicit val ec: ExecutionContextExecutor = system.executionContext
   implicit val config: Config               = system.settings.config
 
-  val host = config.getString("akka.http.server.host")
-  val port = config.getInt("akka.http.server.port")
+  val host: String = config.getString("akka.http.server.host")
+  val port: Int    = config.getInt("akka.http.server.port")
 
   val usersController  = new UsersController
   val threadController = new ThreadsController
@@ -29,13 +30,13 @@ object Main extends App {
     handleExceptions(ExceptionHandlers.defaultExceptionHandler) {
       handleRejections(RejectionHandlers.defaultRejectionHandler) {
         usersController.signinRouter ~
-          usersController.signupRouter ~
-          usersController.userAccountRouter ~
-          threadController.threadRouter
+        usersController.signupRouter ~
+        usersController.userAccountRouter ~
+        threadController.threadRouter
       }
     }
 
-  val bindingFuture =
+  val bindingFuture: Future[Http.ServerBinding] =
     Http()
       .newServerAt(host, port)
       .bind(router)

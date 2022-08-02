@@ -10,25 +10,25 @@ object ErrorResponse extends MessageProvider {
 
   private def getErrorResponseByCode(code: String) = ErrorResponse(code, config.getString(code))
 
-  final val userIdValidationError        = getErrorResponseByCode("010101")
+  final val userIdValidationError: ErrorResponse = getErrorResponseByCode("010101")
 
-  final val userFirstNameValidationError = getErrorResponseByCode("010102")
+  final val userFirstNameValidationError: ErrorResponse = getErrorResponseByCode("010102")
 
-  final val userLastNameValidationError  = getErrorResponseByCode("010103")
+  final val userLastNameValidationError: ErrorResponse = getErrorResponseByCode("010103")
 
-  final val userPasswordValidationError  = getErrorResponseByCode("010104")
+  final val userPasswordValidationError: ErrorResponse = getErrorResponseByCode("010104")
 
-  final val notFoundUser                 = getErrorResponseByCode("010105")
+  final val notFoundUser: ErrorResponse = getErrorResponseByCode("010105")
 
-  final val emailAddressValidationError  = getErrorResponseByCode("010201")
+  final val emailAddressValidationError: ErrorResponse = getErrorResponseByCode("010201")
 
-  final val threadIdValidationError      = getErrorResponseByCode("010301")
+  final val threadIdValidationError: ErrorResponse = getErrorResponseByCode("010301")
 
-  final val threadTitleValidationError   = getErrorResponseByCode("010302")
+  final val threadTitleValidationError: ErrorResponse = getErrorResponseByCode("010302")
 
-  final val messageIdValidationError     = getErrorResponseByCode("010401")
+  final val messageIdValidationError: ErrorResponse = getErrorResponseByCode("010401")
 
-  final val messageTextValidationError   = getErrorResponseByCode("010402")
+  final val messageTextValidationError: ErrorResponse = getErrorResponseByCode("010402")
 
-  final val signinFailure                = getErrorResponseByCode("010501")
+  final val signinFailure: ErrorResponse = getErrorResponseByCode("010501")
 }

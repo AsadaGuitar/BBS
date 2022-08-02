@@ -1,13 +1,13 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, User, UserId, UserName, UserPassword}
+import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 import com.github.asadaGuitar.bbs.repositories.models.UserForm
 
 import java.sql.Timestamp
 import java.util.Date
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends SlickDbConfigProvider with UsersRepository {
   import dbConfig.profile.api._
@@ -38,7 +38,17 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends Slic
           .headOption
       }
     } yield record.map {
-      case Tables.UsersRow(id, first_name, last_name, email_address, password, is_close, create_at, modify_at, close_at) =>
+      case Tables.UsersRow(
+            id,
+            first_name,
+            last_name,
+            email_address,
+            password,
+            is_close,
+            create_at,
+            modify_at,
+            close_at
+          ) =>
         User(
           id = UserId(id),
           firstName = UserName(first_name),
