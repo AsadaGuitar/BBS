@@ -1,6 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 
 trait MessageProvider {
 

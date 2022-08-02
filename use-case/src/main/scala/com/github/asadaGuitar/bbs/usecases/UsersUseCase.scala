@@ -1,18 +1,18 @@
 package com.github.asadaGuitar.bbs.usecases
 
-import com.github.asadaGuitar.bbs.domains.models.{JwtToken, User, UserId}
+import com.github.asadaGuitar.bbs.domains.models.{ JwtToken, User, UserId }
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 import com.github.asadaGuitar.bbs.repositories.models.UserForm
-import com.github.asadaGuitar.bbs.usecases.models.{SigninForm, SignupForm}
+import com.github.asadaGuitar.bbs.usecases.models.{ SigninForm, SignupForm }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Random
 
 final class UsersUseCase(userRepository: UsersRepository)(implicit ec: ExecutionContext) {
 
-  private def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] ={
+  private def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] = {
     val userId = UserId(randomString)
-    userRepository.existsById(userId).flatMap{
+    userRepository.existsById(userId).flatMap {
       case true  => generateRandomUserId()
       case false => Future.successful(userId)
     }
@@ -23,7 +23,7 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
       case SignupForm(emailAddress, firstName, lastName, password) =>
         for {
           userId <- generateRandomUserId()
-          userForm = UserForm(userId,emailAddress,firstName,lastName,password)
+          userForm = UserForm(userId, emailAddress, firstName, lastName, password)
           _ <- userRepository.save(userForm)
         } yield userId
     }
