@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao
 // AUTO-GENERATED Slick data model
-/** Stand-alone Slick data model for immediate use */
-private[adaptor] object Tables
+object Tables
     extends {
       val profile = slick.jdbc.PostgresProfile
     }
