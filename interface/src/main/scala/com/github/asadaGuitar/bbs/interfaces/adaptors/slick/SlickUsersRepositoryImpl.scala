@@ -70,4 +70,12 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends Slic
         .exists
         .result
     }
+
+  override def existsByEmailAddress(mailAddress: EmailAddress): Future[Boolean] =
+    dbConfig.db.run {
+      Tables.Users
+        .filter(_.emailAddress === mailAddress.value)
+        .exists
+        .result
+    }
 }

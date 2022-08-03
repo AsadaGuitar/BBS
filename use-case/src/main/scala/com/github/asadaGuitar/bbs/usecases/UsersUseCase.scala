@@ -42,5 +42,6 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     }
   }
 
-  def findById(userId: UserId): Future[Option[User]] = userRepository.findById(userId)
+  def findById(userId: UserId): Future[Option[User]] =
+    userRepository.findById(userId)
 }
