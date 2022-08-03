@@ -21,6 +21,10 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
   def signup(signupForm: SignupForm): Future[UserId] = {
     val SignupForm(emailAddress, firstName, lastName, password) = signupForm
     for {
+      _ <- userRepository.existsByEmailAddress(emailAddress).flatMap {
+        case true  => Future.unit
+        case false => Future.failed(new IllegalArgumentException("That email address is already in use."))
+      }
       userId <- generateRandomUserId()
       bcryptedPassword <- password.bcryptBoundedFuture
       userForm = UserForm(userId, emailAddress, firstName, lastName, bcryptedPassword)

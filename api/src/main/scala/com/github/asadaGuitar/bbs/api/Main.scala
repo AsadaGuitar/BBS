@@ -9,10 +9,9 @@ import akka.http.scaladsl.server.Route
 import com.github.asadaGuitar.bbs.interfaces.controllers.validations.RejectionHandlers
 import com.typesafe.config.Config
 
-import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 import scala.io.StdIn
-import scala.concurrent.Future
 
 object Main extends App {
 
