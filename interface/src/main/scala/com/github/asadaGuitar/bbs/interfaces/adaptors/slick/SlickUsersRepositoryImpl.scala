@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
 import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
-import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 import com.github.asadaGuitar.bbs.repositories.models.UserForm
