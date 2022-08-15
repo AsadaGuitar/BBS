@@ -37,7 +37,6 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
         authenticate { userId =>
           post {
             entity(as[PostThreadRequestForm]) { postThreadRequestForm =>
-<<<<<<< Updated upstream
               validatePostThreadRequestForm(postThreadRequestForm) { postThreadRequestFormWithoutUserId =>
                 val PostThreadFormWithoutUserId(title, otherUserIds) = postThreadRequestFormWithoutUserId
                 val postThreadForm                                   = PostThreadForm(userId, title, otherUserIds)
@@ -45,21 +44,10 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
                   case Success(threadId) =>
                     complete(PostThreadSucceededResponse(threadId.value))
                   case Failure(exception) =>
-                    system.log.error(s"A database error occurred during post thread. ${exception.getMessage}")
+                    logger.error(s"A database error occurred during post thread. ${exception.getMessage}")
                     throw exception
                 }
-=======
-              validatePostThreadRequestForm(postThreadRequestForm) {
-                case PostThreadFormWithoutUserId(title, otherUserIds) =>
-                  val postThreadForm = PostThreadForm(userId, title, otherUserIds)
-                  onComplete(threadUseCase.create(postThreadForm)) {
-                    case Success(threadId) =>
-                      complete(PostThreadSucceededResponse(threadId.value))
-                    case Failure(exception) =>
-                      logger.error(s"A database error occurred during post thread. ${exception.getMessage}")
-                      throw exception
-                  }
->>>>>>> Stashed changes
+
               }
             }
           } ~
