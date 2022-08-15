@@ -1,38 +1,28 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import com.github.asadaGuitar.bbs.domains.models.{ Message, Thread }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.{
   SlickMessagesRepositoryImpl,
   SlickThreadsRepositoryImpl,
   SlickUserThreadsRepositoryImpl
 }
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
-  MessageResponse,
-  PostMessageRequestForm,
-  PostMessageSucceedResponse,
-  PostThreadFormWithoutUserId,
-  PostThreadRequestForm,
-  PostThreadSucceededResponse,
-  ThreadResponse
-}
+import com.github.asadaGuitar.bbs.interfaces.controllers.models._
 import com.github.asadaGuitar.bbs.interfaces.controllers.validations.ValidationDirectives
-import com.github.asadaGuitar.bbs.domains.models.{ Message, Thread }
 import com.github.asadaGuitar.bbs.usecases.models.{ PostMessageForm, PostThreadForm }
 import com.github.asadaGuitar.bbs.usecases.{ MessageUseCase, ThreadUseCase }
 import com.typesafe.config.Config
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext
 import scala.util.{ Failure, Success }
 
-final class ThreadsController(implicit system: ActorSystem[_])
+final class ThreadsController(implicit val config: Config, executionContext: ExecutionContext)
     extends ValidationDirectives
     with JwtAuthenticator
     with Marshaller {
-
-  implicit val ec: ExecutionContext    = system.executionContext
-  override implicit val config: Config = system.settings.config
+  private val logger = LoggerFactory.getLogger(getClass)
 
   private val userThreadsRepository = new SlickUserThreadsRepositoryImpl
   private val messageRepository     = new SlickMessagesRepositoryImpl
@@ -47,6 +37,7 @@ final class ThreadsController(implicit system: ActorSystem[_])
         authenticate { userId =>
           post {
             entity(as[PostThreadRequestForm]) { postThreadRequestForm =>
+<<<<<<< Updated upstream
               validatePostThreadRequestForm(postThreadRequestForm) { postThreadRequestFormWithoutUserId =>
                 val PostThreadFormWithoutUserId(title, otherUserIds) = postThreadRequestFormWithoutUserId
                 val postThreadForm                                   = PostThreadForm(userId, title, otherUserIds)
@@ -57,6 +48,18 @@ final class ThreadsController(implicit system: ActorSystem[_])
                     system.log.error(s"A database error occurred during post thread. ${exception.getMessage}")
                     throw exception
                 }
+=======
+              validatePostThreadRequestForm(postThreadRequestForm) {
+                case PostThreadFormWithoutUserId(title, otherUserIds) =>
+                  val postThreadForm = PostThreadForm(userId, title, otherUserIds)
+                  onComplete(threadUseCase.create(postThreadForm)) {
+                    case Success(threadId) =>
+                      complete(PostThreadSucceededResponse(threadId.value))
+                    case Failure(exception) =>
+                      logger.error(s"A database error occurred during post thread. ${exception.getMessage}")
+                      throw exception
+                  }
+>>>>>>> Stashed changes
               }
             }
           } ~
@@ -68,7 +71,7 @@ final class ThreadsController(implicit system: ActorSystem[_])
                 }
                 complete(threadResponseList)
               case Failure(exception) =>
-                system.log.error(
+                logger.error(
                   s"A database error occurred during find all threads by user id. ${exception.getMessage}"
                 )
                 throw exception
@@ -88,7 +91,7 @@ final class ThreadsController(implicit system: ActorSystem[_])
                         case Success(messageId) =>
                           complete(PostMessageSucceedResponse(messageId.value))
                         case Failure(exception) =>
-                          system.log.error(s"A database error occurred during post message. ${exception.getMessage}")
+                          logger.error(s"A database error occurred during post message. ${exception.getMessage}")
                           throw exception
                       }
                     }
@@ -102,7 +105,7 @@ final class ThreadsController(implicit system: ActorSystem[_])
                       }
                       complete(messageResponseList)
                     case Failure(exception) =>
-                      system.log.error(s"A database error occurred during post message. ${exception.getMessage}")
+                      logger.error(s"A database error occurred during post message. ${exception.getMessage}")
                       throw exception
                   }
                 }

@@ -1,33 +1,25 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.SlickUsersRepositoryImpl
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
-  ErrorResponse,
-  FindUserByIdSucceededResponse,
-  SigninRequestForm,
-  SigninUserSucceededResponse,
-  SignupRequestForm,
-  SignupUserSucceededResponse
-}
-import com.github.asadaGuitar.bbs.interfaces.controllers.validations.ValidationDirectives
 import com.github.asadaGuitar.bbs.domains.models.User
+import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.SlickUsersRepositoryImpl
+import com.github.asadaGuitar.bbs.interfaces.controllers.models._
+import com.github.asadaGuitar.bbs.interfaces.controllers.validations.ValidationDirectives
 import com.github.asadaGuitar.bbs.usecases.UsersUseCase
 import com.typesafe.config.Config
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext
 import scala.util.{ Failure, Success }
 
-final class UsersController(implicit system: ActorSystem[_])
+final class UsersController(implicit val config: Config, executionContext: ExecutionContext)
     extends ValidationDirectives
     with JwtAuthenticator
     with Marshaller {
 
-  implicit val ec: ExecutionContext = system.executionContext
-  implicit val config: Config       = system.settings.config
+  private val logger = LoggerFactory.getLogger(getClass)
 
   private val usersRepository = new SlickUsersRepositoryImpl
   private val usersUseCase    = new UsersUseCase(usersRepository)
@@ -42,7 +34,7 @@ final class UsersController(implicit system: ActorSystem[_])
                 case Success(userId) =>
                   complete(SignupUserSucceededResponse(userId.value))
                 case Failure(exception) =>
-                  system.log.error(s"A database error occurred during sign-up. ${exception.getMessage}")
+                  logger.error(s"A database error occurred during sign-up. ${exception.getMessage}")
                   throw exception
               }
             }
@@ -64,7 +56,7 @@ final class UsersController(implicit system: ActorSystem[_])
                     case None        => complete(StatusCodes.BadRequest, ErrorResponse.signinFailure)
                   }
                 case Failure(exception) =>
-                  system.log.error(s"A database error occurred during sign-in. ${exception.getMessage}")
+                  logger.error(s"A database error occurred during sign-in. ${exception.getMessage}")
                   throw exception
               }
             }
@@ -93,7 +85,7 @@ final class UsersController(implicit system: ActorSystem[_])
                   case None => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
                 }
               case Failure(exception) =>
-                system.log.error(s"A database error occurred during find user by id. ${exception.getMessage}")
+                logger.error(s"A database error occurred during find user by id. ${exception.getMessage}")
                 throw exception
             }
           }
