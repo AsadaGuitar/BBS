@@ -1,6 +1,9 @@
+.DS_Store
+Thumb.db
+
 # Project exclude paths
 target/
 project/target
 /.bsp/
 /.idea/
-
+log/
