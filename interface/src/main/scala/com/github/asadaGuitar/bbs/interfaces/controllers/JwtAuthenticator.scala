@@ -7,7 +7,7 @@ import com.typesafe.config.Config
 
 trait JwtAuthenticator extends Marshaller {
 
-  implicit val config: Config
+  val config: Config
 
   protected val jwtAuth: JwtAuthentication = new JwtAuthentication {
     override lazy val jwtConfig: JwtConfig = new JwtConfig(config)

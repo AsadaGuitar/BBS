@@ -1,5 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao
 
+import slick.lifted.ForeignKeyQuery
 private[adaptors] trait UserThreadsTable {
 
   self: Tables =>
@@ -51,13 +52,13 @@ private[adaptors] trait UserThreadsTable {
 
     val closeAt: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("close_at", O.Default(None))
 
-    lazy val threadsFk = foreignKey("user_threads_threads_id", threadId, Threads)(
+    lazy val threadsFk: ForeignKeyQuery[Threads,ThreadsRow] = foreignKey("user_threads_threads_id", threadId, Threads)(
       r => r.id,
       onUpdate = ForeignKeyAction.NoAction,
       onDelete = ForeignKeyAction.NoAction
     )
 
-    lazy val usersFk = foreignKey("user_threads_user_id", userId, Users)(
+    lazy val usersFk: ForeignKeyQuery[Users,UsersRow] = foreignKey("user_threads_user_id", userId, Users)(
       r => r.id,
       onUpdate = ForeignKeyAction.NoAction,
       onDelete = ForeignKeyAction.NoAction
