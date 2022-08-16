@@ -4,10 +4,7 @@ import com.github.asadaGuitar.bbs.domains.models
 import com.github.asadaGuitar.bbs.domains.models.{ Message, MessageId, MessageText, ThreadId, UserId }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.MessagesRepository
-import com.github.asadaGuitar.bbs.repositories.models.MessageForm
 
-import java.sql.Timestamp
-import java.util
 import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
@@ -16,8 +13,8 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
 
   import dbConfig.profile.api._
 
-  override def save(messageForm: MessageForm): Future[Int] = {
-    val MessageForm(id, threadId, userId, text) = messageForm
+  override def save(message: Message): Future[Int] = {
+    val Message(id, threadId, userId, text, isClose, createAt, modifyAt, closeAt) = message
     dbConfig.db.run {
       Tables.Messages.insertOrUpdate {
         Tables.MessagesRow(
@@ -25,13 +22,16 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
           threadId = threadId.value,
           userId = userId.value,
           text = text.value,
-          createAt = new Timestamp(new util.Date().getTime)
+          isClose = isClose,
+          createAt = createAt,
+          modifyAt = modifyAt,
+          closeAt = closeAt
         )
       }
     }
   }
 
-  override def findAllByThreadId(threadId: ThreadId): Future[List[Message]] =
+  override def findAllByThreadId(threadId: ThreadId): Future[Vector[Message]] =
     for {
       rows <- dbConfig.db.run {
         Tables.Messages
@@ -50,7 +50,7 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
         modifyAt = modifyAt,
         closeAt = closeAt
       )
-    }.toList
+    }.toVector
 
   override def existsById(messageId: MessageId): Future[Boolean] =
     dbConfig.db.run {

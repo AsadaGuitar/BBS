@@ -1,14 +1,23 @@
 package com.github.asadaGuitar.bbs.usecases
 
-import com.github.asadaGuitar.bbs.domains.models.{ JwtToken, User, UserId }
+import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, JwtToken, User, UserId, UserName, UserPassword }
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
-import com.github.asadaGuitar.bbs.repositories.models.UserForm
-import com.github.asadaGuitar.bbs.usecases.models.{ SigninForm, SignupForm }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Random
 
+object UsersUseCase {
+  final case class SigninCommand(userId: UserId, password: UserPassword)
+  final case class SignupCommand(
+      emailAddress: EmailAddress,
+      firstName: UserName,
+      lastName: UserName,
+      password: UserPassword
+  )
+}
+
 final class UsersUseCase(userRepository: UsersRepository)(implicit ec: ExecutionContext) {
+  import UsersUseCase._
 
   private def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] = {
     val userId = UserId(randomString)
@@ -18,8 +27,8 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     }
   }
 
-  def signup(signupForm: SignupForm): Future[UserId] = {
-    val SignupForm(emailAddress, firstName, lastName, password) = signupForm
+  def signup(signupCommand: SignupCommand): Future[UserId] = {
+    val SignupCommand(emailAddress, firstName, lastName, password) = signupCommand
     for {
       _ <- userRepository.existsByEmailAddress(emailAddress).flatMap {
         case true  => Future.unit
@@ -27,13 +36,19 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
       }
       userId <- generateRandomUserId()
       bcryptedPassword <- password.bcryptBoundedFuture
-      userForm = UserForm(userId, emailAddress, firstName, lastName, bcryptedPassword)
-      _ <- userRepository.save(userForm)
+      user = User(
+        id = userId,
+        firstName = firstName,
+        lastName = lastName,
+        emailAddress = emailAddress,
+        password = bcryptedPassword
+      )
+      _ <- userRepository.save(user)
     } yield userId
   }
 
-  def signin(signinForm: SigninForm)(generateToken: UserId => JwtToken): Future[Option[JwtToken]] = {
-    val SigninForm(userId, password) = signinForm
+  def signin(signinCommand: SigninCommand)(generateToken: UserId => JwtToken): Future[Option[JwtToken]] = {
+    val SigninCommand(userId, password) = signinCommand
     for {
       user <- userRepository.findById(userId)
       bcryptedPassword <- password.bcryptBoundedFuture

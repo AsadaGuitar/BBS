@@ -10,7 +10,7 @@ import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
   SignupRequestForm
 }
 import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, MessageText, ThreadId, UserId, UserName, UserPassword }
-import com.github.asadaGuitar.bbs.usecases.models.{ SigninForm, SignupForm }
+import com.github.asadaGuitar.bbs.usecases.models.{ SigninCommand, SignupCommand }
 
 trait ValidationDirectives {
 
@@ -29,13 +29,13 @@ trait ValidationDirectives {
   protected def validateEmailAddress(value: String): Directive1[EmailAddress] =
     Validations.validateEmailAddress(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
-  protected def validateSignupRequestForm(value: SignupRequestForm): Directive1[SignupForm] =
+  protected def validateSignupRequestForm(value: SignupRequestForm): Directive1[SignupCommand] =
     Validations.validateSignupRequestForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
   protected def validateThreadId(value: String): Directive1[ThreadId] =
     Validations.validateThreadId(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
-  protected def validateSigninRequestForm(value: SigninRequestForm): Directive1[SigninForm] =
+  protected def validateSigninRequestForm(value: SigninRequestForm): Directive1[SigninCommand] =
     Validations.validateSigninRequestForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
   protected def validatePostThreadRequestForm(value: PostThreadRequestForm): Directive1[PostThreadFormWithoutUserId] =

@@ -1,5 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao
-object Tables
+
+private[adaptors] object Tables
     extends {
       val profile = slick.jdbc.PostgresProfile
     }
@@ -11,6 +12,6 @@ private[adaptors] trait Tables extends MessagesTable with ThreadsTable with User
 
   lazy val schema: profile.SchemaDescription = Messages.schema ++ Threads.schema ++ Users.schema ++ UserThreads.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
-  def ddl = schema
+  def ddl: profile.DDL = schema
 
 }

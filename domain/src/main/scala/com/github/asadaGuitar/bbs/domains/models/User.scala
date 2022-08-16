@@ -1,5 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
+import java.time.Instant
 import java.util.Date
 import scala.concurrent.Future
 import scala.util.Try
@@ -10,10 +11,10 @@ final case class User(
     lastName: UserName,
     emailAddress: EmailAddress,
     password: UserPassword,
-    isClose: Boolean = true,
-    createAt: Date,
-    modifyAt: Option[Date],
-    closeAt: Option[Date]
+    isClose: Boolean = false,
+    createAt: Instant = Instant.now(),
+    modifyAt: Option[Instant] = None,
+    closeAt: Option[Instant] = None
 )
 
 final case class UserId(value: String) {

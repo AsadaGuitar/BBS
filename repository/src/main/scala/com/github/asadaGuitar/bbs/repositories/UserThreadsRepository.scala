@@ -1,13 +1,12 @@
 package com.github.asadaGuitar.bbs.repositories
 
-import com.github.asadaGuitar.bbs.domains.models.{ ThreadId, UserId }
-import com.github.asadaGuitar.bbs.repositories.models.UserThreadsForm
+import com.github.asadaGuitar.bbs.domains.models.{ ThreadId, UserId, UserThreads }
 
 import scala.concurrent.Future
 
 trait UserThreadsRepository {
 
-  def save(userThreadsForm: UserThreadsForm): Future[Int]
+  def save(userThreads: UserThreads): Future[Int]
 
-  def findAllByUserId(userId: UserId): Future[List[ThreadId]]
+  def findAllByUserId(userId: UserId): Future[Vector[ThreadId]]
 }

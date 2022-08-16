@@ -4,10 +4,7 @@ import cats.Functor
 import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, ThreadTitle, UserId }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.ThreadsRepository
-import com.github.asadaGuitar.bbs.repositories.models.ThreadForm
 
-import java.sql.Timestamp
-import java.util.Date
 import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
@@ -16,8 +13,8 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
 
   import dbConfig.profile.api._
 
-  override def save(threadForm: ThreadForm): Future[Int] = {
-    val ThreadForm(id, userId, title) = threadForm
+  override def save(thread: Thread): Future[Int] = {
+    val Thread(id, userId, title, isClose, createAt, modifyAt, closeAt) = thread
     dbConfig.db.run {
       Tables.Threads
         .insertOrUpdate {
@@ -25,7 +22,10 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
             id = id.value,
             userId = userId.value,
             title = title.value,
-            createAt = new Timestamp(new Date().getTime)
+            isClose = isClose,
+            createAt = createAt,
+            modifyAt = modifyAt,
+            closeAt = closeAt
           )
         }
     }
@@ -41,14 +41,14 @@ final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
       }
     }
 
-  override def findAllByUserId(userId: UserId): Future[List[Thread]] =
+  override def findAllByUserId(userId: UserId): Future[Vector[Thread]] =
     convertThreadsRowsToThead {
       dbConfig.db.run {
         Tables.Threads
           .filter(thread => thread.userId === userId.value && !thread.isClose)
           .result
       }
-    }.map(_.toList)
+    }.map(_.toVector)
 
   override def existsById(threadId: ThreadId): Future[Boolean] =
     dbConfig.db.run {

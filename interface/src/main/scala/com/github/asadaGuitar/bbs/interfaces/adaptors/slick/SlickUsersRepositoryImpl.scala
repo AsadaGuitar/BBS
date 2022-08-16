@@ -3,17 +3,14 @@ package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
-import com.github.asadaGuitar.bbs.repositories.models.UserForm
 
-import java.sql.Timestamp
-import java.util.Date
 import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends SlickDbConfigProvider with UsersRepository {
   import dbConfig.profile.api._
 
-  override def save(userForm: UserForm): Future[Int] = {
-    val UserForm(id, emailAddress, firstName, lastName, password) = userForm
+  override def save(user: User): Future[Int] = {
+    val User(id, emailAddress, firstName, lastName, password, isClose, createAt, modifyAt, closeAt) = user
     dbConfig.db.run {
       Tables.Users
         .insertOrUpdate(
@@ -23,7 +20,10 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends Slic
             lastName = lastName.value,
             emailAddress = emailAddress.value,
             password = password.value,
-            createAt = new Timestamp(new Date().getTime)
+            isClose = isClose,
+            createAt = createAt,
+            modifyAt = modifyAt,
+            closeAt = closeAt
           )
         )
     }

@@ -64,20 +64,20 @@ object Validations {
         ErrorResponse.userPasswordValidationError.invalidNel
     }
 
-  def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupForm] = {
+  def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupCommand] = {
     val SignupRequestForm(first_name, last_name, email_address, password) = value
     (
       validateEmailAddress(email_address),
       validateUserFirstName(first_name),
       validateUserLastName(last_name),
       validateUserPassword(password)
-    ).mapN(SignupForm)
+    ).mapN(SignupCommand)
   }
 
-  def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninForm] = {
+  def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninCommand] = {
     val SigninRequestForm(email_address, password) = value
     (validateUserId(email_address), validateUserPassword(password))
-      .mapN(SigninForm)
+      .mapN(SigninCommand)
   }
 
   def validateThreadTitle(value: String): ValidatedNel[ErrorResponse, ThreadTitle] =

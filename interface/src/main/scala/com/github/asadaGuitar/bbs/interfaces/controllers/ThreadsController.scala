@@ -10,7 +10,6 @@ import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.{
 }
 import com.github.asadaGuitar.bbs.interfaces.controllers.models._
 import com.github.asadaGuitar.bbs.interfaces.controllers.validations.ValidationDirectives
-import com.github.asadaGuitar.bbs.usecases.models.{ PostMessageForm, PostThreadForm }
 import com.github.asadaGuitar.bbs.usecases.{ MessageUseCase, ThreadUseCase }
 import com.typesafe.config.Config
 import org.slf4j.LoggerFactory
@@ -39,7 +38,7 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
             entity(as[PostThreadRequestForm]) { postThreadRequestForm =>
               validatePostThreadRequestForm(postThreadRequestForm) { postThreadRequestFormWithoutUserId =>
                 val PostThreadFormWithoutUserId(title, otherUserIds) = postThreadRequestFormWithoutUserId
-                val postThreadForm                                   = PostThreadForm(userId, title, otherUserIds)
+                val postThreadForm                                   = ThreadDto(userId, title, otherUserIds)
                 onComplete(threadUseCase.create(postThreadForm)) {
                   case Success(threadId) =>
                     complete(PostThreadSucceededResponse(threadId.value))
@@ -74,7 +73,7 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
                 post {
                   entity(as[PostMessageRequestForm]) { postMessageRequestForm =>
                     validatePostMessageRequestForm(postMessageRequestForm) { messageText =>
-                      val postMessageForm = PostMessageForm(threadId, userId, messageText)
+                      val postMessageForm = MessageDto(threadId, userId, messageText)
                       onComplete(messageUseCase.create(postMessageForm)) {
                         case Success(messageId) =>
                           complete(PostMessageSucceedResponse(messageId.value))
