@@ -14,8 +14,15 @@ final case class UserThreads(
 sealed trait UserThreadsId
 
 object UserThreadsId {
+
+  def apply(value: Int): UserThreadsId = value match {
+    case n if n.isNaN || n == 0 => Nothing
+    case otherwise              => Just(otherwise)
+  }
+
   final case class Just(value: Int) extends UserThreadsId {
     require(!value.isNaN && (value != 0))
   }
+
   case object Nothing extends UserThreadsId
 }

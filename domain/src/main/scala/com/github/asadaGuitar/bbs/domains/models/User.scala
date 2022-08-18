@@ -28,7 +28,8 @@ final case class UserPassword(value: String) {
   import com.github.t3hnar.bcrypt._
   require(value.nonEmpty)
 
-  def bcryptBounded: Try[UserPassword] = value.bcryptSafeBounded.map(UserPassword)
-
-  def bcryptBoundedFuture: Future[UserPassword] = Future.fromTry(bcryptBounded)
+  def bcryptBoundedFuture: Future[UserPassword] =
+    Future.fromTry {
+      value.bcryptSafeBounded.map(UserPassword)
+    }
 }
