@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
 import java.time.Instant
-import java.util.Date
 import scala.concurrent.Future
 import scala.util.Try
 

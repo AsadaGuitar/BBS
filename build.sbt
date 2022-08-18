@@ -3,7 +3,7 @@ ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaV
 val akkaVersion        = "2.6.19"
 val akkaHttpVersion    = "10.2.9"
 val jwtAkkaHttpVersion = "1.4.4"
-val catsCoreVersion    = "2.7.0"
+val catsCoreVersion    = "2.8.0"
 val slickVersion       = "3.3.3"
 val logbackVersion     = "1.2.11"
 val postgresVersion    = "42.3.6"
@@ -42,8 +42,9 @@ lazy val domain = (project in file("domain"))
   .settings(
     name := "bbs-domain",
     libraryDependencies ++= Seq(
-      "com.github.t3hnar" %% "scala-bcrypt" % "4.3.0",
-      "org.scalatest"     %% "scalatest"    % scalaTestVersion % Test
+      "com.github.t3hnar" %% "scala-bcrypt"      % "4.3.0",
+      "commons-validator"  % "commons-validator" % "1.7",
+      "org.scalatest"     %% "scalatest"         % scalaTestVersion % Test
     )
   )
 

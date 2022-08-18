@@ -1,13 +1,14 @@
 package com.github.asadaGuitar.bbs.domains.models
 
-import scala.util.matching.Regex
+import org.apache.commons.validator.routines.EmailValidator
 
 object EmailAddress {
-  val emailPattern: Regex =
-    "^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$".r
+  private val validator: EmailValidator            = EmailValidator.getInstance()
+  def validateEmailAddress(value: String): Boolean = validator.isValid(value)
+
 }
 
 final case class EmailAddress(value: String) {
   import EmailAddress._
-  require(emailPattern.matches(value))
+  require(validateEmailAddress(value))
 }
