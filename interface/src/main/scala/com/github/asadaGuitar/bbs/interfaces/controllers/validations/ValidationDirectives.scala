@@ -3,16 +3,22 @@ package com.github.asadaGuitar.bbs.interfaces.controllers.validations
 import akka.http.scaladsl.server.Directive1
 import akka.http.scaladsl.server.Directives.{ provide, reject }
 import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
-  PostMessageRequestForm,
+  PostMessageRequest,
   PostThreadFormWithoutUserId,
-  PostThreadRequestForm,
-  SigninRequestForm,
-  SignupRequestForm
+  PostThreadRequest,
+  SigninRequest,
+  SignupRequest
 }
 import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, MessageText, ThreadId, UserId, UserName, UserPassword }
-import com.github.asadaGuitar.bbs.usecases.models.{ SigninCommand, SignupCommand }
+import com.github.asadaGuitar.bbs.usecases.UsersUseCase.{ SigninCommand, SignupCommand }
 
 trait ValidationDirectives {
+
+  protected def validateSignupRequest(value: SignupRequest): Directive1[SignupCommand] =
+    Validations.validateSignupRequest(value).fold(e => reject(ValidationErrorRejection(e)), provide)
+
+  protected def validateSigninRequest(value: SigninRequest): Directive1[SigninCommand] =
+    Validations.validateSigninRequest(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
   protected def validateUserId(value: String): Directive1[UserId] =
     Validations.validateUserId(value).fold(e => reject(ValidationErrorRejection(e)), provide)
@@ -29,18 +35,12 @@ trait ValidationDirectives {
   protected def validateEmailAddress(value: String): Directive1[EmailAddress] =
     Validations.validateEmailAddress(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
-  protected def validateSignupRequestForm(value: SignupRequestForm): Directive1[SignupCommand] =
-    Validations.validateSignupRequestForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
-
   protected def validateThreadId(value: String): Directive1[ThreadId] =
     Validations.validateThreadId(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
-  protected def validateSigninRequestForm(value: SigninRequestForm): Directive1[SigninCommand] =
-    Validations.validateSigninRequestForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
+  protected def validatePostThreadRequest(value: PostThreadRequest): Directive1[PostThreadFormWithoutUserId] =
+    Validations.validatePostThreadRequest(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 
-  protected def validatePostThreadRequestForm(value: PostThreadRequestForm): Directive1[PostThreadFormWithoutUserId] =
-    Validations.validatePostThreadForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
-
-  protected def validatePostMessageRequestForm(value: PostMessageRequestForm): Directive1[MessageText] =
-    Validations.validatePostMessageForm(value).fold(e => reject(ValidationErrorRejection(e)), provide)
+  protected def validatePostMessageRequest(value: PostMessageRequest): Directive1[MessageText] =
+    Validations.validatePostMessage(value).fold(e => reject(ValidationErrorRejection(e)), provide)
 }

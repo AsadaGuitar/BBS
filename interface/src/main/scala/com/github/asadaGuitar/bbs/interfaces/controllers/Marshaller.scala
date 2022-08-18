@@ -4,17 +4,17 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
   ErrorListResponse,
   ErrorResponse,
+  FindMessageByThreadIdSucceededResponse,
+  FindThreadByUserIdSucceededResponse,
   FindUserByIdSucceededResponse,
-  MessageResponse,
-  PostMessageRequestForm,
-  PostMessageSucceedResponse,
-  PostThreadRequestForm,
+  PostMessageRequest,
+  PostMessageSucceededResponse,
+  PostThreadRequest,
   PostThreadSucceededResponse,
-  SigninRequestForm,
-  SigninUserSucceededResponse,
-  SignupRequestForm,
-  SignupUserSucceededResponse,
-  ThreadResponse,
+  SigninRequest,
+  SigninSucceededResponse,
+  SignupRequest,
+  SignupSucceededResponse,
   UserIdRequest
 }
 import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, JwtToken, UserId, UserName, UserPassword }
@@ -30,9 +30,9 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val emailAddressMarshaller: RootJsonFormat[EmailAddress] = jsonFormat1(EmailAddress.apply)
 
-  implicit val signinRequestFormMarshaller: RootJsonFormat[SigninRequestForm] = jsonFormat2(SigninRequestForm)
+  implicit val signinRequestFormMarshaller: RootJsonFormat[SigninRequest] = jsonFormat2(SigninRequest)
 
-  implicit val signupRequestFormMarshaller: RootJsonFormat[SignupRequestForm] = jsonFormat4(SignupRequestForm)
+  implicit val signupRequestFormMarshaller: RootJsonFormat[SignupRequest] = jsonFormat4(SignupRequest)
 
   implicit val jwtTokenMarshaller: RootJsonFormat[JwtToken] = jsonFormat1(JwtToken)
 
@@ -40,12 +40,12 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val errorListResponseMarshaller: RootJsonFormat[ErrorListResponse] = jsonFormat1(ErrorListResponse)
 
-  implicit val signupUserSucceededResponseMarshaller: RootJsonFormat[SignupUserSucceededResponse] = jsonFormat1(
-    SignupUserSucceededResponse
+  implicit val signupUserSucceededResponseMarshaller: RootJsonFormat[SignupSucceededResponse] = jsonFormat1(
+    SignupSucceededResponse
   )
 
-  implicit val signinUserSucceededResponseMarshaller: RootJsonFormat[SigninUserSucceededResponse] = jsonFormat1(
-    SigninUserSucceededResponse
+  implicit val signinUserSucceededResponseMarshaller: RootJsonFormat[SigninSucceededResponse] = jsonFormat1(
+    SigninSucceededResponse
   )
 
   implicit val findUserByIdSucceededResponseMarshaller: RootJsonFormat[FindUserByIdSucceededResponse] = jsonFormat4(
@@ -54,23 +54,27 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val userIdRequestMarshaller: RootJsonFormat[UserIdRequest] = jsonFormat1(UserIdRequest)
 
-  implicit val postThreadRequestFormMarshaller: RootJsonFormat[PostThreadRequestForm] = jsonFormat2(
-    PostThreadRequestForm
+  implicit val postThreadRequestFormMarshaller: RootJsonFormat[PostThreadRequest] = jsonFormat2(
+    PostThreadRequest
   )
 
   implicit val postThreadSucceededResponseMarshaller: RootJsonFormat[PostThreadSucceededResponse] = jsonFormat1(
     PostThreadSucceededResponse
   )
 
-  implicit val threadResponseMarshaller: RootJsonFormat[ThreadResponse] = jsonFormat2(ThreadResponse)
-
-  implicit val postMessageRequestFormMarshaller: RootJsonFormat[PostMessageRequestForm] = jsonFormat1(
-    PostMessageRequestForm
+  implicit val threadResponseMarshaller: RootJsonFormat[FindThreadByUserIdSucceededResponse] = jsonFormat2(
+    FindThreadByUserIdSucceededResponse
   )
 
-  implicit val postMessageSucceedResponseMarshaller: RootJsonFormat[PostMessageSucceedResponse] = jsonFormat1(
-    PostMessageSucceedResponse
+  implicit val postMessageRequestFormMarshaller: RootJsonFormat[PostMessageRequest] = jsonFormat1(
+    PostMessageRequest
   )
 
-  implicit val messageResponseMarshaller: RootJsonFormat[MessageResponse] = jsonFormat2(MessageResponse)
+  implicit val postMessageSucceedResponseMarshaller: RootJsonFormat[PostMessageSucceededResponse] = jsonFormat1(
+    PostMessageSucceededResponse
+  )
+
+  implicit val messageResponseMarshaller: RootJsonFormat[FindMessageByThreadIdSucceededResponse] = jsonFormat2(
+    FindMessageByThreadIdSucceededResponse
+  )
 }

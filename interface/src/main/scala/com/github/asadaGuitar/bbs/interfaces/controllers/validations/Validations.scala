@@ -4,11 +4,11 @@ import cats.data.ValidatedNel
 import cats.implicits.{ catsSyntaxTuple2Semigroupal, catsSyntaxTuple4Semigroupal, catsSyntaxValidatedId, toTraverseOps }
 import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
   ErrorResponse,
-  PostMessageRequestForm,
+  PostMessageRequest,
   PostThreadFormWithoutUserId,
-  PostThreadRequestForm,
-  SigninRequestForm,
-  SignupRequestForm,
+  PostThreadRequest,
+  SigninRequest,
+  SignupRequest,
   UserIdRequest
 }
 import com.github.asadaGuitar.bbs.domains.models.{
@@ -20,9 +20,25 @@ import com.github.asadaGuitar.bbs.domains.models.{
   UserName,
   UserPassword
 }
-import com.github.asadaGuitar.bbs.usecases.models._
+import com.github.asadaGuitar.bbs.usecases.UsersUseCase.{ SigninCommand, SignupCommand }
 
 object Validations {
+
+  def validateSignupRequest(value: SignupRequest): ValidatedNel[ErrorResponse, SignupCommand] = {
+    val SignupRequest(first_name, last_name, email_address, password) = value
+    (
+      validateEmailAddress(email_address),
+      validateUserFirstName(first_name),
+      validateUserLastName(last_name),
+      validateUserPassword(password)
+    ).mapN(SignupCommand)
+  }
+
+  def validateSigninRequest(value: SigninRequest): ValidatedNel[ErrorResponse, SigninCommand] = {
+    val SigninRequest(email_address, password) = value
+    (validateUserId(email_address), validateUserPassword(password))
+      .mapN(SigninCommand)
+  }
 
   def validateUserId(value: String): ValidatedNel[ErrorResponse, UserId] =
     try {
@@ -64,22 +80,6 @@ object Validations {
         ErrorResponse.userPasswordValidationError.invalidNel
     }
 
-  def validateSignupRequestForm(value: SignupRequestForm): ValidatedNel[ErrorResponse, SignupCommand] = {
-    val SignupRequestForm(first_name, last_name, email_address, password) = value
-    (
-      validateEmailAddress(email_address),
-      validateUserFirstName(first_name),
-      validateUserLastName(last_name),
-      validateUserPassword(password)
-    ).mapN(SignupCommand)
-  }
-
-  def validateSigninRequestForm(value: SigninRequestForm): ValidatedNel[ErrorResponse, SigninCommand] = {
-    val SigninRequestForm(email_address, password) = value
-    (validateUserId(email_address), validateUserPassword(password))
-      .mapN(SigninCommand)
-  }
-
   def validateThreadTitle(value: String): ValidatedNel[ErrorResponse, ThreadTitle] =
     try {
       ThreadTitle(value).validNel
@@ -112,14 +112,14 @@ object Validations {
         ErrorResponse.messageTextValidationError.invalidNel
     }
 
-  def validatePostThreadForm(value: PostThreadRequestForm): ValidatedNel[ErrorResponse, PostThreadFormWithoutUserId] = {
-    val PostThreadRequestForm(title, ids) = value
+  def validatePostThreadRequest(value: PostThreadRequest): ValidatedNel[ErrorResponse, PostThreadFormWithoutUserId] = {
+    val PostThreadRequest(title, ids) = value
     (validateThreadTitle(title), ids.map(validateUserIdRequest).sequence)
       .mapN(PostThreadFormWithoutUserId)
   }
 
-  def validatePostMessageForm(value: PostMessageRequestForm): ValidatedNel[ErrorResponse, MessageText] = {
-    val PostMessageRequestForm(message) = value
+  def validatePostMessage(value: PostMessageRequest): ValidatedNel[ErrorResponse, MessageText] = {
+    val PostMessageRequest(message) = value
     validateMessageText(message)
   }
 }

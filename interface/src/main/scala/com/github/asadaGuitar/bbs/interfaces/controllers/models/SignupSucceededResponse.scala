@@ -1,3 +1,3 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers.models
 
-final case class PostMessageRequestForm(message: String)
+final case class SignupSucceededResponse(user_id: String)

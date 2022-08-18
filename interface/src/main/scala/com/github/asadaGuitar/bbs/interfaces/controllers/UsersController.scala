@@ -1,5 +1,6 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
+import akka.event.DiagnosticLoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -28,11 +29,11 @@ final class UsersController(implicit val config: Config, executionContext: Execu
     pathPrefix("signup") {
       pathEndOrSingleSlash {
         post {
-          entity(as[SignupRequestForm]) { signupRequestForm =>
-            validateSignupRequestForm(signupRequestForm) { signupForm =>
-              onComplete(usersUseCase.signup(signupForm)) {
+          entity(as[SignupRequest]) { signupRequest =>
+            validateSignupRequest(signupRequest) { signupCommand =>
+              onComplete(usersUseCase.signup(signupCommand)) {
                 case Success(userId) =>
-                  complete(SignupUserSucceededResponse(userId.value))
+                  complete(SignupSucceededResponse(userId.value))
                 case Failure(exception) =>
                   logger.error(s"A database error occurred during sign-up. ${exception.getMessage}")
                   throw exception
@@ -47,12 +48,12 @@ final class UsersController(implicit val config: Config, executionContext: Execu
     pathPrefix("signin") {
       pathEndOrSingleSlash {
         post {
-          entity(as[SigninRequestForm]) { signinRequestForm =>
-            validateSigninRequestForm(signinRequestForm) { signinForm =>
-              onComplete(usersUseCase.signin(signinForm)(this.generateToken)) {
+          entity(as[SigninRequest]) { signinRequest =>
+            validateSigninRequest(signinRequest) { signinCommand =>
+              onComplete(usersUseCase.signin(signinCommand)(this.generateToken)) {
                 case Success(jwtToken) =>
                   jwtToken match {
-                    case Some(token) => complete(SigninUserSucceededResponse(token.value))
+                    case Some(token) => complete(SigninSucceededResponse(token.value))
                     case None        => complete(StatusCodes.BadRequest, ErrorResponse.signinFailure)
                   }
                 case Failure(exception) =>
@@ -68,12 +69,13 @@ final class UsersController(implicit val config: Config, executionContext: Execu
   val userAccountRouter: Route =
     pathPrefix("user_account" / Segment) { requestUserId =>
       validateUserId(requestUserId) { otherUserId =>
-        authenticate { _ =>
+        this.authenticate { _ =>
           get {
             onComplete(usersUseCase.findById(otherUserId)) {
               case Success(user) =>
                 user match {
                   case Some(user) =>
+                    // TODO: Implement isClose judgment with use-case layer.
                     val User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) = user
                     if (!isClose) {
                       complete(

@@ -21,6 +21,7 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
     extends ValidationDirectives
     with JwtAuthenticator
     with Marshaller {
+
   private val logger = LoggerFactory.getLogger(getClass)
 
   private val userThreadsRepository = new SlickUserThreadsRepositoryImpl
@@ -35,18 +36,17 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
       pathEndOrSingleSlash {
         authenticate { userId =>
           post {
-            entity(as[PostThreadRequestForm]) { postThreadRequestForm =>
-              validatePostThreadRequestForm(postThreadRequestForm) { postThreadRequestFormWithoutUserId =>
+            entity(as[PostThreadRequest]) { postThreadRequest =>
+              validatePostThreadRequest(postThreadRequest) { postThreadRequestFormWithoutUserId =>
                 val PostThreadFormWithoutUserId(title, otherUserIds) = postThreadRequestFormWithoutUserId
-                val postThreadForm                                   = ThreadDto(userId, title, otherUserIds)
-                onComplete(threadUseCase.create(postThreadForm)) {
+                val createCommand = ThreadUseCase.CreateCommand(userId, title, otherUserIds)
+                onComplete(threadUseCase.create(createCommand)) {
                   case Success(threadId) =>
                     complete(PostThreadSucceededResponse(threadId.value))
                   case Failure(exception) =>
                     logger.error(s"A database error occurred during post thread. ${exception.getMessage}")
                     throw exception
                 }
-
               }
             }
           } ~
@@ -54,7 +54,7 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
             onComplete(threadUseCase.findAllByUserId(userId)) {
               case Success(threadList) =>
                 val threadResponseList = threadList.map { case Thread(id, _, title, _, _, _, _) =>
-                  ThreadResponse(id.value, title.value)
+                  FindThreadByUserIdSucceededResponse(id.value, title.value)
                 }
                 complete(threadResponseList)
               case Failure(exception) =>
@@ -71,12 +71,12 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
             pathEndOrSingleSlash {
               authenticate { userId =>
                 post {
-                  entity(as[PostMessageRequestForm]) { postMessageRequestForm =>
-                    validatePostMessageRequestForm(postMessageRequestForm) { messageText =>
-                      val postMessageForm = MessageDto(threadId, userId, messageText)
-                      onComplete(messageUseCase.create(postMessageForm)) {
+                  entity(as[PostMessageRequest]) { postMessageRequest =>
+                    validatePostMessageRequest(postMessageRequest) { messageText =>
+                      val createCommand = MessageUseCase.CreateCommand(threadId, userId, messageText)
+                      onComplete(messageUseCase.create(createCommand)) {
                         case Success(messageId) =>
-                          complete(PostMessageSucceedResponse(messageId.value))
+                          complete(PostMessageSucceededResponse(messageId.value))
                         case Failure(exception) =>
                           logger.error(s"A database error occurred during post message. ${exception.getMessage}")
                           throw exception
@@ -87,10 +87,10 @@ final class ThreadsController(implicit val config: Config, executionContext: Exe
                 get {
                   onComplete(messageUseCase.findAllByThreadId(threadId)) {
                     case Success(messageList) =>
-                      val messageResponseList = messageList.map { case Message(id, _, _, text, _, _, _, _) =>
-                        MessageResponse(id.value, text.value)
+                      val responses = messageList.map { case Message(id, _, _, text, _, _, _, _) =>
+                        FindMessageByThreadIdSucceededResponse(id.value, text.value)
                       }
-                      complete(messageResponseList)
+                      complete(responses)
                     case Failure(exception) =>
                       logger.error(s"A database error occurred during post message. ${exception.getMessage}")
                       throw exception
