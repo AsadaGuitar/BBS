@@ -13,7 +13,7 @@ object MessageUseCase {
 final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: ExecutionContext) {
   import MessageUseCase._
 
-  private def generateRandomMessageId(
+  private[usecases] def generateRandomMessageId(
       randomString: String = Random.alphanumeric.take(15).mkString
   ): Future[MessageId] = {
     val messageId = MessageId(randomString)

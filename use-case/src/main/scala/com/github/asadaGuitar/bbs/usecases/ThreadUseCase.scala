@@ -16,7 +16,7 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepos
 ) {
   import ThreadUseCase._
 
-  private def generateRandomThreadId(randomString: String = Random.alphanumeric.take(12).mkString): Future[ThreadId] = {
+  private[usecases] def generateRandomThreadId(randomString: String = Random.alphanumeric.take(12).mkString): Future[ThreadId] = {
     val threadId = ThreadId(randomString)
     threadsRepository.existsById(threadId).flatMap {
       case true  => generateRandomThreadId()

@@ -7,7 +7,9 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Random
 
 object UsersUseCase {
+
   final case class SigninCommand(userId: UserId, password: UserPassword)
+
   final case class SignupCommand(
       emailAddress: EmailAddress,
       firstName: UserName,
@@ -19,7 +21,7 @@ object UsersUseCase {
 final class UsersUseCase(userRepository: UsersRepository)(implicit ec: ExecutionContext) {
   import UsersUseCase._
 
-  private def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] = {
+  private[usecases] def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] = {
     val userId = UserId(randomString)
     userRepository.existsById(userId).flatMap {
       case true  => generateRandomUserId()
