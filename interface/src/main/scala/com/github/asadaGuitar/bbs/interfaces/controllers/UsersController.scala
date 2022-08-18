@@ -75,7 +75,7 @@ final class UsersController(implicit val config: Config, executionContext: Execu
               case Success(user) =>
                 user match {
                   case Some(user) =>
-                    val User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) = user
+                    val User(id, firstName, lastName, emailAddress, _, _, _, _, _) = user
                     complete(
                       FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value)
                     )
