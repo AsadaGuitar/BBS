@@ -41,5 +41,5 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepos
     for {
       threadIds <- userThreadsRepository.findAllByUserId(userId)
       threads <- threadIds.map(threadsRepository.findById).sequence
-    } yield threads.flatten
+    } yield threads.flatten.filter(!_.isClose)
 }

@@ -33,5 +33,7 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
   }
 
   def findAllByThreadId(threadId: ThreadId): Future[Vector[Message]] =
-    messagesRepository.findAllByThreadId(threadId)
+    messagesRepository
+      .findAllByThreadId(threadId)
+      .map(_.filter(!_.isClose))
 }

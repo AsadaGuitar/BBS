@@ -62,5 +62,9 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
   }
 
   def findById(userId: UserId): Future[Option[User]] =
-    userRepository.findById(userId)
+    userRepository.findById(userId).map {
+      _.flatMap { user =>
+        if (user.isClose) None else Some(user)
+      }
+    }
 }

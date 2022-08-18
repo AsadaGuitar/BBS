@@ -75,15 +75,10 @@ final class UsersController(implicit val config: Config, executionContext: Execu
               case Success(user) =>
                 user match {
                   case Some(user) =>
-                    // TODO: Implement isClose judgment with use-case layer.
                     val User(id, firstName, lastName, emailAddress, _, isClose, _, _, _) = user
-                    if (!isClose) {
-                      complete(
-                        FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value)
-                      )
-                    } else {
-                      complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
-                    }
+                    complete(
+                      FindUserByIdSucceededResponse(id.value, firstName.value, lastName.value, emailAddress.value)
+                    )
                   case None => complete(StatusCodes.NotFound, ErrorResponse.notFoundUser)
                 }
               case Failure(exception) =>
