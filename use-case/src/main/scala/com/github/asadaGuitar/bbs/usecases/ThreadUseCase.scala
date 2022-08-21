@@ -16,10 +16,10 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepos
 ) {
   import ThreadUseCase._
 
-  private[usecases] def generateRandomThreadId(randomString: String = Random.alphanumeric.take(12).mkString): Future[ThreadId] = {
-    val threadId = ThreadId(randomString)
+  private[usecases] def generateRandomThreadId(length: Int): Future[ThreadId] = {
+    val threadId = ThreadId(Random.alphanumeric.take(length).mkString)
     threadsRepository.existsById(threadId).flatMap {
-      case true  => generateRandomThreadId()
+      case true  => generateRandomThreadId(length)
       case false => Future.successful(threadId)
     }
   }
@@ -27,7 +27,7 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepos
   def create(createCommand: CreateCommand): Future[ThreadId] = {
     val CreateCommand(userId, title, otherUserIds) = createCommand
     for {
-      threadId <- generateRandomThreadId()
+      threadId <- generateRandomThreadId(12)
       thread = Thread(id = threadId, userId = userId, title = title)
       _ <- threadsRepository.save(thread)
       _ <- (userId +: otherUserIds).map { otherUserId =>
@@ -39,7 +39,9 @@ final class ThreadUseCase(threadsRepository: ThreadsRepository, userThreadsRepos
 
   def findAllByUserId(userId: UserId): Future[Vector[Thread]] =
     for {
-      threadIds <- userThreadsRepository.findAllByUserId(userId)
-      threads <- threadIds.map(threadsRepository.findById).sequence
+      userThreadsVec <- userThreadsRepository.findAllByUserId(userId)
+      threads <- userThreadsVec.map{ userThreads =>
+        threadsRepository.findById(userThreads.threadId)
+      }.sequence
     } yield threads.flatten.filter(!_.isClose)
 }

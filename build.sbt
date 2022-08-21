@@ -1,13 +1,13 @@
 ThisBuild / scalafixScalaBinaryVersion := CrossVersion.binaryScalaVersion(scalaVersion.value)
 
-val akkaVersion        = "2.6.19"
-val akkaHttpVersion    = "10.2.9"
+val akkaVersion = "2.6.19"
+val akkaHttpVersion = "10.2.9"
 val jwtAkkaHttpVersion = "1.4.4"
-val catsCoreVersion    = "2.8.0"
-val slickVersion       = "3.3.3"
-val logbackVersion     = "1.2.11"
-val postgresVersion    = "42.3.6"
-val scalaTestVersion   = "3.2.12"
+val catsCoreVersion = "2.8.0"
+val slickVersion = "3.3.3"
+val logbackVersion = "1.2.11"
+val postgresVersion = "42.3.6"
+val scalaTestVersion = "3.2.12"
 
 lazy val baseSettings = Seq(
   version := "0.1.0-SNAPSHOT",
@@ -25,7 +25,7 @@ lazy val baseSettings = Seq(
       "-Yrangepos",
       "-Ywarn-unused"
     )
-  ),
+    ),
   resolvers ++= Resolver.sonatypeOssRepos("snapshots") ++ Resolver.sonatypeOssRepos("releases") ++ Seq(
     "Seasar Repository" at "https://maven.seasar.org/maven2/",
     "DynamoDB Local Repository" at "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
@@ -42,9 +42,10 @@ lazy val domain = (project in file("domain"))
   .settings(
     name := "bbs-domain",
     libraryDependencies ++= Seq(
-      "com.github.t3hnar" %% "scala-bcrypt"      % "4.3.0",
-      "commons-validator"  % "commons-validator" % "1.7",
-      "org.scalatest"     %% "scalatest"         % scalaTestVersion % Test
+      "com.github.t3hnar" %% "scala-bcrypt" % "4.3.0",
+      "org.typelevel" %% "cats-core" % catsCoreVersion,
+      "commons-validator" % "commons-validator" % "1.7",
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
 
@@ -53,12 +54,12 @@ lazy val repository = (project in file("repository"))
   .settings(
     name := "bbs-repository",
     libraryDependencies ++= Seq(
-      "org.typelevel"      %% "cats-core"       % catsCoreVersion,
-      "com.typesafe.slick" %% "slick"           % slickVersion,
-      "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion,
-      "org.postgresql"      % "postgresql"      % postgresVersion,
-      "ch.qos.logback"      % "logback-classic" % logbackVersion,
-      "org.scalatest"      %% "scalatest"       % scalaTestVersion % Test
+      "org.typelevel" %% "cats-core" % catsCoreVersion,
+      "com.typesafe.slick" %% "slick" % slickVersion,
+      "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+      "org.postgresql" % "postgresql" % postgresVersion,
+      "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
   .dependsOn(domain)
@@ -68,9 +69,10 @@ lazy val usecase = (project in file("use-case"))
   .settings(
     name := "bbs-use-case",
     libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-core"       % catsCoreVersion,
+      "org.typelevel" %% "cats-core" % catsCoreVersion,
+      "com.typesafe.akka" %% "akka-actor" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % logbackVersion,
-      "org.scalatest" %% "scalatest"       % scalaTestVersion % Test
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
   .dependsOn(repository)
@@ -80,18 +82,18 @@ lazy val interface = (project in file("interface"))
   .settings(
     name := "bbs-interface",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka"  %% "akka-actor-typed"     % akkaVersion,
-      "com.typesafe.akka"  %% "akka-http-spray-json" % akkaHttpVersion,
-      "com.typesafe.akka"  %% "akka-http"            % akkaHttpVersion,
-      "com.emarsys"        %% "jwt-akka-http"        % jwtAkkaHttpVersion,
-      "org.typelevel"      %% "cats-core"            % catsCoreVersion,
-      "com.typesafe.slick" %% "slick"                % slickVersion,
-      "com.typesafe.slick" %% "slick-hikaricp"       % slickVersion,
-      "org.postgresql"      % "postgresql"           % postgresVersion,
-      "com.typesafe.akka"  %% "akka-slf4j"           % akkaVersion,
-      "ch.qos.logback"      % "logback-classic"      % logbackVersion,
-      "com.typesafe.akka"  %% "akka-testkit"         % akkaVersion      % Test,
-      "org.scalatest"      %% "scalatest"            % scalaTestVersion % Test
+      "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
+      "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+      "com.emarsys" %% "jwt-akka-http" % jwtAkkaHttpVersion,
+      "org.typelevel" %% "cats-core" % catsCoreVersion,
+      "com.typesafe.slick" %% "slick" % slickVersion,
+      "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+      "org.postgresql" % "postgresql" % postgresVersion,
+      "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+      "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
   .dependsOn(usecase)
@@ -102,13 +104,13 @@ lazy val api = (project in file("api"))
     name := "bbs-api",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
-      "com.typesafe.akka" %% "akka-http"        % akkaHttpVersion,
-      "org.typelevel"     %% "cats-core"        % catsCoreVersion,
-      "com.typesafe.akka" %% "akka-slf4j"       % akkaVersion,
-      "com.typesafe.akka" %% "akka-stream"      % akkaVersion,
-      "ch.qos.logback"     % "logback-classic"  % logbackVersion,
-      "com.typesafe.akka" %% "akka-testkit"     % akkaVersion      % Test,
-      "org.scalatest"     %% "scalatest"        % scalaTestVersion % Test
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+      "org.typelevel" %% "cats-core" % catsCoreVersion,
+      "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+      "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+      "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
   .dependsOn(interface)
@@ -119,12 +121,12 @@ lazy val tool = (project in file("tool"))
   .settings(
     name := "bbs-tool",
     libraryDependencies ++= Seq(
-      "com.typesafe.slick" %% "slick"           % slickVersion,
-      "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion,
-      "org.postgresql"      % "postgresql"      % postgresVersion,
-      "com.typesafe.slick" %% "slick-codegen"   % slickVersion,
-      "ch.qos.logback"      % "logback-classic" % logbackVersion,
-      "org.scalatest"      %% "scalatest"       % scalaTestVersion % Test
+      "com.typesafe.slick" %% "slick" % slickVersion,
+      "com.typesafe.slick" %% "slick-hikaricp" % slickVersion,
+      "org.postgresql" % "postgresql" % postgresVersion,
+      "com.typesafe.slick" %% "slick-codegen" % slickVersion,
+      "ch.qos.logback" % "logback-classic" % logbackVersion,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   ).dependsOn(interface)
 

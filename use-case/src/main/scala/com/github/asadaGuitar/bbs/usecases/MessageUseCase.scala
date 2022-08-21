@@ -13,12 +13,10 @@ object MessageUseCase {
 final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: ExecutionContext) {
   import MessageUseCase._
 
-  private[usecases] def generateRandomMessageId(
-      randomString: String = Random.alphanumeric.take(15).mkString
-  ): Future[MessageId] = {
-    val messageId = MessageId(randomString)
+  private[usecases] def generateRandomMessageId(length: Int): Future[MessageId] = {
+    val messageId = MessageId(Random.alphanumeric.take(length).mkString)
     messagesRepository.existsById(messageId).flatMap {
-      case true  => generateRandomMessageId()
+      case true  => generateRandomMessageId(length)
       case false => Future.successful(messageId)
     }
   }
@@ -26,7 +24,7 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
   def create(createCommand: CreateCommand): Future[MessageId] = {
     val CreateCommand(threadId, userId, text) = createCommand
     for {
-      messageId <- generateRandomMessageId()
+      messageId <- generateRandomMessageId(15)
       message = Message(id = messageId, threadId = threadId, userId = userId, text = text)
       _ <- messagesRepository.save(message)
     } yield messageId

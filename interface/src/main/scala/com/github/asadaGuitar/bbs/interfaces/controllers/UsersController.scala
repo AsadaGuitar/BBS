@@ -1,6 +1,5 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
-import akka.event.DiagnosticLoggingAdapter
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route

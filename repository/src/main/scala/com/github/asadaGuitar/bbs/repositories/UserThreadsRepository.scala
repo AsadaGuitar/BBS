@@ -8,5 +8,5 @@ trait UserThreadsRepository {
 
   def save(userThreads: UserThreads): Future[Int]
 
-  def findAllByUserId(userId: UserId): Future[Vector[ThreadId]]
+  def findAllByUserId(userId: UserId): Future[Vector[UserThreads]]
 }

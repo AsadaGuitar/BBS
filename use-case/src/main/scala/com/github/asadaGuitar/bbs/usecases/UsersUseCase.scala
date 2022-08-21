@@ -1,30 +1,30 @@
 package com.github.asadaGuitar.bbs.usecases
 
-import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, JwtToken, User, UserId, UserName, UserPassword }
+import cats.implicits.toTraverseOps
+import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, JwtToken, User, UserId, UserName, UserPassword}
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 object UsersUseCase {
 
   final case class SigninCommand(userId: UserId, password: UserPassword)
 
-  final case class SignupCommand(
-      emailAddress: EmailAddress,
-      firstName: UserName,
-      lastName: UserName,
-      password: UserPassword
-  )
+  final case class SignupCommand(emailAddress: EmailAddress,
+                                  firstName: UserName,
+                                  lastName: UserName,
+                                  password: UserPassword)
 }
 
 final class UsersUseCase(userRepository: UsersRepository)(implicit ec: ExecutionContext) {
+
   import UsersUseCase._
 
-  private[usecases] def generateRandomUserId(randomString: String = Random.alphanumeric.take(10).mkString): Future[UserId] = {
-    val userId = UserId(randomString)
+  private[usecases] def generateRandomUserId(length: Int): Future[UserId] = {
+    val userId = UserId(Random.alphanumeric.take(length).mkString)
     userRepository.existsById(userId).flatMap {
-      case true  => generateRandomUserId()
+      case true => generateRandomUserId(length)
       case false => Future.successful(userId)
     }
   }
@@ -33,17 +33,19 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     val SignupCommand(emailAddress, firstName, lastName, password) = signupCommand
     for {
       _ <- userRepository.existsByEmailAddress(emailAddress).flatMap {
-        case true  => Future.unit
-        case false => Future.failed(new IllegalArgumentException("That email address is already in use."))
+        case false => Future.unit
+        case true =>
+          Future.failed(
+            new IllegalArgumentException(
+              s"That email address is already in use. ${emailAddress.value}"))
       }
-      userId <- generateRandomUserId()
-      bcryptedPassword <- password.bcryptBoundedFuture
+      userId <- generateRandomUserId(12)
       user = User(
         id = userId,
         firstName = firstName,
         lastName = lastName,
         emailAddress = emailAddress,
-        password = bcryptedPassword
+        password = password
       )
       _ <- userRepository.save(user)
     } yield userId
@@ -52,13 +54,17 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
   def signin(signinCommand: SigninCommand)(generateToken: UserId => JwtToken): Future[Option[JwtToken]] = {
     val SigninCommand(userId, password) = signinCommand
     for {
-      user <- userRepository.findById(userId)
-      bcryptedPassword <- password.bcryptBoundedFuture
+      userOption <- userRepository.findById(userId)
+      isValidOption <- userOption.map { user =>
+        Future.fromTry(user.password ?= password)
+      }.sequence
     } yield {
-      user.flatMap {
-        case foundUser if foundUser.password.equals(bcryptedPassword) =>
-          Some(generateToken(userId))
-        case _ => None
+      for {
+        user <- userOption
+        isValid <- isValidOption
+        if isValid
+      } yield {
+        generateToken(user.id)
       }
     }
   }
