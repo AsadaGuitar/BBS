@@ -11,21 +11,23 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends Slic
 
   override def save(user: User): Future[Int] = {
     val User(id, emailAddress, firstName, lastName, password, isClose, createAt, modifyAt, closeAt) = user
-    dbConfig.db.run {
-      Tables.Users
-        .insertOrUpdate(
-          Tables.UsersRow(
-            id = id.value,
-            firstName = firstName.value,
-            lastName = lastName.value,
-            emailAddress = emailAddress.value,
-            password = password.value,
-            isClose = isClose,
-            createAt = createAt,
-            modifyAt = modifyAt,
-            closeAt = closeAt
+    Future.fromTry(password.crypted).flatMap{ crypted =>
+      dbConfig.db.run {
+        Tables.Users
+          .insertOrUpdate(
+            Tables.UsersRow(
+              id = id.value,
+              firstName = firstName.value,
+              lastName = lastName.value,
+              emailAddress = emailAddress.value,
+              password = crypted,
+              isClose = isClose,
+              createAt = createAt,
+              modifyAt = modifyAt,
+              closeAt = closeAt
+            )
           )
-        )
+      }
     }
   }
 
