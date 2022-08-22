@@ -4,7 +4,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 final class EmailAddressSpec extends AnyWordSpec {
 
-  "EmailAddress" should {
+  "EmailAddress.apply" should {
 
     "succeeds when the value is correct." in {
       assert {
@@ -24,5 +24,21 @@ final class EmailAddressSpec extends AnyWordSpec {
         EmailAddress("")
       }
     }
+  }
+
+  "EmailAddress.matches" should {
+
+    "returns true as `Boolean` when a value is email address." in {
+      assert(EmailAddress.matches("info@sample.com"))
+    }
+
+    "returns false as `Boolean` when a value is invalided." in {
+      assert(!EmailAddress.matches("test"))
+    }
+
+    "returns false as `Boolean` when a value is empty." in {
+      assert(!EmailAddress.matches(""))
+    }
+
   }
 }
