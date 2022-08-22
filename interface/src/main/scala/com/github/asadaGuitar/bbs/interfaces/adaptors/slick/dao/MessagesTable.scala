@@ -1,5 +1,7 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao
 
+import slick.sql.SqlProfile.ColumnOption.SqlType
+
 import java.sql.Timestamp
 import java.util.Date
 
@@ -34,11 +36,11 @@ private[adaptors] trait MessagesTable {
 
     val isClose = column[Boolean]("is_close", O.Default(false))
 
-    val createAt = column[Timestamp]("create_at")
+    val createAt = column[Timestamp]("create_at", SqlType("timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL"))
 
-    val modifyAt = column[Option[Timestamp]]("modify_at", O.Default(None))
+    val modifyAt = column[Option[Timestamp]]("modify_at")
 
-    val closeAt = column[Option[Timestamp]]("close_at", O.Default(None))
+    val closeAt = column[Option[Timestamp]]("close_at")
   }
 
   lazy val Messages = new TableQuery(tag => new Messages(tag))

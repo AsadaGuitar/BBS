@@ -34,7 +34,7 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val signupRequestFormMarshaller: RootJsonFormat[SignupRequest] = jsonFormat4(SignupRequest)
 
-  implicit val jwtTokenMarshaller: RootJsonFormat[JwtToken] = jsonFormat1(JwtToken)
+  implicit val jwtTokenMarshaller: RootJsonFormat[JwtToken] = jsonFormat1(JwtToken.apply)
 
   implicit val errorResponseMarshaller: RootJsonFormat[ErrorResponse] = jsonFormat2(ErrorResponse.apply)
 

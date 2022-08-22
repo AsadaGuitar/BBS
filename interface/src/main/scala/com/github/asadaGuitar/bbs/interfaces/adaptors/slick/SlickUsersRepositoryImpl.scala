@@ -6,12 +6,16 @@ import com.github.asadaGuitar.bbs.repositories.UsersRepository
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext) extends SlickDbConfigProvider with UsersRepository {
+final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext)
+    extends SlickDbConfigProvider
+    with UsersRepository
+    with DbColumnsConvertor {
+
   import dbConfig.profile.api._
 
   override def save(user: User): Future[Int] = {
     val User(id, emailAddress, firstName, lastName, password, isClose, createAt, modifyAt, closeAt) = user
-    Future.fromTry(password.crypted).flatMap{ crypted =>
+    Future.fromTry(password.crypted).flatMap { crypted =>
       dbConfig.db.run {
         Tables.Users
           .insertOrUpdate(

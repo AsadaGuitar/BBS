@@ -5,11 +5,14 @@ import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, ThreadTitle
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
 import com.github.asadaGuitar.bbs.repositories.ThreadsRepository
 
+import cats.implicits._
+
 import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
     extends ThreadsRepository
-    with SlickDbConfigProvider {
+    with SlickDbConfigProvider
+    with DbColumnsConvertor {
 
   import dbConfig.profile.api._
 

@@ -9,25 +9,31 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
     extends MessagesRepository
-    with SlickDbConfigProvider {
+    with SlickDbConfigProvider
+    with DbColumnsConvertor {
 
   import dbConfig.profile.api._
 
   override def save(message: Message): Future[Int] = {
     val Message(id, threadId, userId, text, isClose, createAt, modifyAt, closeAt) = message
-    dbConfig.db.run {
-      Tables.Messages.insertOrUpdate {
-        Tables.MessagesRow(
-          id = id.value,
-          threadId = threadId.value,
-          userId = userId.value,
-          text = text.value,
-          isClose = isClose,
-          createAt = createAt,
-          modifyAt = modifyAt,
-          closeAt = closeAt
-        )
-      }
+    this.existsById(id).flatMap {
+      case true =>
+        dbConfig.db.run {
+          Tables.Messages.insertOrUpdate {
+            Tables.MessagesRow(
+              id = id.value,
+              threadId = threadId.value,
+              userId = userId.value,
+              text = text.value,
+              isClose = isClose,
+              createAt = createAt,
+              modifyAt = modifyAt,
+              closeAt = closeAt
+            )
+          }
+        }
+      case false =>
+        Future.failed(new SlickException(s"message id already exists. ${message.id.value}"))
     }
   }
 

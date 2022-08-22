@@ -24,26 +24,20 @@ final case class UserName(value: String) {
   require(value.nonEmpty)
 }
 
-object UserPassword {
-  def apply(value: String): UserPassword = new UserPassword(value)
-}
-
-final class UserPassword(_value: String) {
+final case class UserPassword(plain: String) {
   import com.github.t3hnar.bcrypt._
 
-  require(_value.nonEmpty)
+  require(plain.nonEmpty)
 
-  val crypted: Try[String] = _value.bcryptSafeBounded
-
-  val plain: String = _value
+  val crypted: Try[String] = plain.bcryptSafeBounded
 
   def ?=(other: UserPassword)(implicit ec: ExecutionContext): Try[Boolean] =
-    this.crypted.flatMap{
+    this.crypted.flatMap {
       other.plain.isBcryptedSafeBounded
     }
 
   def ?=(plain: String)(implicit ec: ExecutionContext): Try[Boolean] =
-    this.crypted.flatMap{
+    this.crypted.flatMap {
       plain.isBcryptedSafeBounded
     }
 }
