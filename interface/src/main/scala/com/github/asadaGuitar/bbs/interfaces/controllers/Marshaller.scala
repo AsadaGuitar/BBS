@@ -17,7 +17,7 @@ import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
   SignupSucceededResponse,
   UserIdRequest
 }
-import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, JwtToken, UserId, UserName, UserPassword }
+import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, Jwt, UserId, UserName, UserPassword }
 import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
 
 trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
@@ -34,7 +34,7 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val signupRequestFormMarshaller: RootJsonFormat[SignupRequest] = jsonFormat4(SignupRequest)
 
-  implicit val jwtTokenMarshaller: RootJsonFormat[JwtToken] = jsonFormat1(JwtToken.apply)
+  implicit val jwtTokenMarshaller: RootJsonFormat[Jwt] = jsonFormat1(Jwt.apply)
 
   implicit val errorResponseMarshaller: RootJsonFormat[ErrorResponse] = jsonFormat2(ErrorResponse.apply)
 

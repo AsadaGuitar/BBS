@@ -1,6 +1,6 @@
 package com.github.asadaGuitar.bbs.usecases
 
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, JwtToken, User, UserId, UserName, UserPassword}
+import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, Jwt, User, UserId, UserName, UserPassword}
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 import org.scalatest.exceptions.TestFailedException
 import org.scalatest.wordspec.AsyncWordSpec
@@ -141,7 +141,7 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
           password = UserPassword("TEST"))
 
       new UsersUseCase(usersRepositoryCaseFailed)
-        .signin(signinCommand)(_ => JwtToken(
+        .signin(signinCommand)(_ => Jwt(
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
             "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
             "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
@@ -177,7 +177,7 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
         userId <- usersUseCase.signup(signupCommand)
         user <- usersUseCase.signin(
           UsersUseCase.SigninCommand(userId, UserPassword("testPassword"))
-        )(_ => JwtToken(
+        )(_ => Jwt(
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
             "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
             "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"

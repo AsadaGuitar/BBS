@@ -3,11 +3,10 @@ package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 import cats.implicits.catsSyntaxFlatMapOps
 import com.github.asadaGuitar.bbs.domains.models.{ Message, MessageId, MessageText, ThreadId, UserId }
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
-import org.scalatest.{ BeforeAndAfter, ParallelTestExecution }
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.BeforeAndAfter
 import org.scalatest.wordspec.AsyncWordSpec
 import slick.SlickException
-import slick.migration.api.{ PostgresDialect, SqlMigration, TableMigration }
+import slick.migration.api.{ PostgresDialect, TableMigration }
 
 import scala.language.postfixOps
 import scala.util.Random
@@ -15,8 +14,6 @@ import scala.util.Random
 final class SlickMessagesRepositoryImplSpec
     extends AsyncWordSpec
     with BeforeAndAfter
-    with ScalaFutures
-    with ParallelTestExecution
     with SlickDbConfigProvider
     with DbColumnsConvertor {
 

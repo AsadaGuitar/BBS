@@ -1,7 +1,7 @@
 package com.github.asadaGuitar.bbs.usecases
 
 import cats.implicits.toTraverseOps
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, JwtToken, User, UserId, UserName, UserPassword}
+import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, Jwt, User, UserId, UserName, UserPassword}
 import com.github.asadaGuitar.bbs.repositories.UsersRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -51,7 +51,7 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     } yield userId
   }
 
-  def signin(signinCommand: SigninCommand)(generateToken: UserId => JwtToken): Future[Option[JwtToken]] = {
+  def signin(signinCommand: SigninCommand)(generateToken: UserId => Jwt): Future[Option[Jwt]] = {
     val SigninCommand(userId, password) = signinCommand
     for {
       userOption <- userRepository.findById(userId)

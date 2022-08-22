@@ -11,4 +11,4 @@ final case class UserThreads(
     closeAt: Option[Instant] = None
 )
 
-final case class UserThreadsId(value: Int)
+final case class UserThreadsId(value: Long)

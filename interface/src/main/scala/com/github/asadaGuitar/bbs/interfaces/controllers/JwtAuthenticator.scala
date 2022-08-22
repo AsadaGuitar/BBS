@@ -2,7 +2,7 @@ package com.github.asadaGuitar.bbs.interfaces.controllers
 
 import akka.http.scaladsl.server.Directive1
 import com.emarsys.jwt.akka.http.{ JwtAuthentication, JwtConfig }
-import com.github.asadaGuitar.bbs.domains.models.{ JwtToken, UserId }
+import com.github.asadaGuitar.bbs.domains.models.{ Jwt, UserId }
 import com.typesafe.config.Config
 
 trait JwtAuthenticator extends Marshaller {
@@ -13,7 +13,7 @@ trait JwtAuthenticator extends Marshaller {
     override lazy val jwtConfig: JwtConfig = new JwtConfig(config)
   }
 
-  def generateToken(userId: UserId): JwtToken = JwtToken(jwtAuth.generateToken(userId))
+  def generateToken(userId: UserId): Jwt = Jwt(jwtAuth.generateToken(userId))
 
   def authenticate: Directive1[UserId] =
     jwtAuth.jwtAuthenticate(jwtAuth.as[UserId])

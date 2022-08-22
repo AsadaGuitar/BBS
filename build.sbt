@@ -42,6 +42,7 @@ lazy val domain = (project in file("domain"))
   .settings(
     name := "bbs-domain",
     libraryDependencies ++= Seq(
+      "com.typesafe" % "config" % "1.4.2",
       "com.github.t3hnar" %% "scala-bcrypt"      % "4.3.0",
       "org.typelevel"     %% "cats-core"         % catsCoreVersion,
       "commons-validator"  % "commons-validator" % "1.7",

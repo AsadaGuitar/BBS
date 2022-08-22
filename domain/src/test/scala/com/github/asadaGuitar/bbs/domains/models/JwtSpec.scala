@@ -2,26 +2,30 @@ package com.github.asadaGuitar.bbs.domains.models
 
 import org.scalatest.wordspec.AnyWordSpec
 
-final class EmailAddressSpec extends AnyWordSpec {
+final class JwtSpec extends AnyWordSpec {
 
-  "EmailAddress" should {
+  "Jwt" should {
 
     "succeeds when the value is correct." in {
       assert {
-        EmailAddress("info@sample.com")
+        Jwt(
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+            "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
+            "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+        )
         true
       }
     }
 
     "fails on invalid values." in {
       assertThrows[IllegalArgumentException] {
-        EmailAddress("test")
+        Jwt("test")
       }
     }
 
     "fails on empty values." in {
       assertThrows[IllegalArgumentException] {
-        EmailAddress("")
+        Jwt("")
       }
     }
   }
