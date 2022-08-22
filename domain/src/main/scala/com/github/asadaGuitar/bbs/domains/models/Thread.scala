@@ -1,9 +1,9 @@
 package com.github.asadaGuitar.bbs.domains.models
 
+import cats.implicits.catsSyntaxEq
 import com.typesafe.config.ConfigFactory
 
 import java.time.Instant
-import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 final case class Thread(
     id: ThreadId,
@@ -18,10 +18,10 @@ final case class Thread(
 object ThreadId {
 
   private val lengthRequired =
-    ConfigFactory.load().getIntList("application.domain.thread.id.lengths").asScala.toVector
+    ConfigFactory.load().getInt("application.domain.thread.id.lengths")
 
   def matches(value: String): Boolean =
-    lengthRequired.contains(value.length)
+    lengthRequired === value.length
 
 }
 
@@ -35,8 +35,8 @@ final case class ThreadId(value: String) {
 object ThreadTitle {
 
   private val (minLengthRequired, maxLengthRequired) =
-    (ConfigFactory.load().getIntList("application.domain.thread.title.length.min").asScala.min,
-      ConfigFactory.load().getIntList("application.domain.thread.title.length.max").asScala.max)
+    (ConfigFactory.load().getInt("application.domain.thread.title.length.min"),
+      ConfigFactory.load().getInt("application.domain.thread.title.length.max"))
 
   def matches(value: String): Boolean =
     minLengthRequired <= value.length && value.length <= maxLengthRequired
