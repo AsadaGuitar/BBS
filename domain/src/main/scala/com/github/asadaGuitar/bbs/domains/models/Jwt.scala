@@ -1,14 +1,9 @@
 package com.github.asadaGuitar.bbs.domains.models
 
-import com.typesafe.config.ConfigFactory
-
 object Jwt {
 
-  private val patternRequired =
-    ConfigFactory.load().getString("application.domain.jwt.pattern").r
-
   def matches(value: String): Boolean =
-    patternRequired.matches(value)
+    "^[a-zA-Z\\d].*\\.[a-zA-Z\\d].*\\.[a-zA-Z\\d].*$".r.matches(value)
 }
 
 final case class Jwt(value: String) {

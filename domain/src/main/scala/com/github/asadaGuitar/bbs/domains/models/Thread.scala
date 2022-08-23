@@ -17,12 +17,7 @@ final case class Thread(
 
 object ThreadId {
 
-  private val lengthRequired =
-    ConfigFactory.load().getInt("application.domain.thread.id.lengths")
-
-  def matches(value: String): Boolean =
-    lengthRequired === value.length
-
+  def matches(value: String): Boolean = 12 === value.length
 }
 
 final case class ThreadId(value: String) {
@@ -34,12 +29,8 @@ final case class ThreadId(value: String) {
 
 object ThreadTitle {
 
-  private val (minLengthRequired, maxLengthRequired) =
-    (ConfigFactory.load().getInt("application.domain.thread.title.length.min"),
-      ConfigFactory.load().getInt("application.domain.thread.title.length.max"))
-
   def matches(value: String): Boolean =
-    minLengthRequired <= value.length && value.length <= maxLengthRequired
+    8 <= value.length && value.length <= 255
 }
 
 final case class ThreadTitle(value: String) {

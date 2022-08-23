@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
 import cats.implicits.catsSyntaxEq
-import com.typesafe.config.ConfigFactory
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext
@@ -19,11 +18,7 @@ final case class User(id: UserId,
 
 object UserId {
 
-  private val lengthRequired =
-    ConfigFactory.load().getInt("application.domain.user.id.length")
-
-  def matches(value: String): Boolean =
-    lengthRequired === value.length
+  def matches(value: String): Boolean = 12 === value.length
 }
 
 final case class UserId(value: String) {
@@ -35,14 +30,7 @@ final case class UserId(value: String) {
 
 object UserName {
 
-  private val (minLengthRequired, maxLengthRequired) ={
-    val config = ConfigFactory.load()
-    (config.getInt("application.domain.user.name.length.min"),
-      config.getInt("application.domain.user.name.length.max"))
-  }
-
-  def matches(value: String): Boolean =
-    minLengthRequired <= value.length && value.length <= maxLengthRequired
+  def matches(value: String): Boolean = 2 <= value.length && value.length <= 50
 }
 
 final case class UserName(value: String) {
@@ -54,12 +42,7 @@ final case class UserName(value: String) {
 
 object UserPassword {
 
-  private val patternRequired =
-    ConfigFactory.load().getString("application.domain.user.password.pattern").r
-
-  def matches(value: String): Boolean =
-    patternRequired.matches(value)
-
+  def matches(value: String): Boolean = "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)[a-zA-Z\\d]{8,100}$".r.matches(value)
 }
 
 final case class UserPassword(plain: String) {

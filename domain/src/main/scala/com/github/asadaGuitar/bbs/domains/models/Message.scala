@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
 import cats.implicits.catsSyntaxEq
-import com.typesafe.config.ConfigFactory
 
 import java.time.Instant
 
@@ -16,11 +15,7 @@ final case class Message(id: MessageId,
 
 object MessageId {
 
-  private val lengthRequired =
-    ConfigFactory.load().getInt("application.domain.message.id.length")
-
-  def matches(value: String): Boolean =
-    lengthRequired === value.length
+  def matches(value: String): Boolean = 12 === value.length
 }
 
 final case class MessageId(value: String) {
@@ -32,14 +27,7 @@ final case class MessageId(value: String) {
 
 object MessageText {
 
-  private val (minLengthRequired, maxLengthRequired) = {
-    val config = ConfigFactory.load()
-    (config.getInt("application.domain.message.text.length.min"),
-      config.getInt("application.domain.message.text.length.max"))
-  }
-
-  def matches(value: String): Boolean =
-    minLengthRequired <= value.length && value.length <= maxLengthRequired
+  def matches(value: String): Boolean = 1 <= value.length && value.length <= 1024
 }
 
 final case class MessageText(value: String) {

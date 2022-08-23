@@ -6,7 +6,7 @@ final class EmailAddressSpec extends AnyWordSpec {
 
   "EmailAddress.apply" should {
 
-    "succeeds when the value is correct." in {
+    "succeeds when the value is email address." in {
       assert {
         EmailAddress("info@sample.com")
         true
@@ -28,17 +28,16 @@ final class EmailAddressSpec extends AnyWordSpec {
 
   "EmailAddress.matches" should {
 
-    "returns true as `Boolean` when a value is email address." in {
+    "succeeds when the value is email address." in {
       assert(EmailAddress.matches("info@sample.com"))
     }
 
-    "returns false as `Boolean` when a value is invalided." in {
+    "fails on invalid values." in {
       assert(!EmailAddress.matches("test"))
     }
 
-    "returns false as `Boolean` when a value is empty." in {
+    "fails on empty values." in {
       assert(!EmailAddress.matches(""))
     }
-
   }
 }
