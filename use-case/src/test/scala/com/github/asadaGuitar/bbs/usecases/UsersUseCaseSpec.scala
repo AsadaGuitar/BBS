@@ -213,7 +213,7 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
           val User(id, firstName, lastName, emailAddress, password, isClose, createAt, modifyAt, closeAt) = user
           val afterCreatTime = Instant.now()
           Future.fromTry{
-            password ?= testPassword
+            password.verify(testPassword)
           }.map { isValid =>
             assert{
               (id === userId) &&

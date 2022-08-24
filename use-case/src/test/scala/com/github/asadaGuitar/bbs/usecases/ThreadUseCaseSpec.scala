@@ -10,12 +10,18 @@ import scala.concurrent.Future
 
 final class ThreadUseCaseSpec extends AsyncWordSpec {
 
-  private val userThreadsRepositoryCaseSucceeded = new UserThreadsRepository {
+  trait ThreadUseCaseSpecException extends Throwable
+
+  final case class UserThreadsRepositoryTestFailedException() extends ThreadUseCaseSpecException
+
+  final case class ThreadRepositoryTestFailedException() extends ThreadUseCaseSpecException
+
+  private def userThreadsRepositoryCaseSucceeded = new UserThreadsRepository {
 
     private var database: Vector[UserThreads] = Vector.empty
 
     override def save(userThreads: UserThreads): Future[Int] =
-      Future.successful{
+      Future.successful {
         database = database :+ userThreads
         1
       }
@@ -24,14 +30,16 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
       Future.successful(database.filter(_.userId === userId))
   }
 
-  private val userThreadsRepositoryCaseFailed = new UserThreadsRepository {
+  private def userThreadsRepositoryCaseFailed = new UserThreadsRepository {
 
-    override def save(userThreads: UserThreads): Future[Int] = Future.failed(new Throwable("failed!"))
+    override def save(userThreads: UserThreads): Future[Int] =
+      Future.failed(UserThreadsRepositoryTestFailedException())
 
-    override def findAllByUserId(userId: UserId): Future[Vector[UserThreads]] = Future.failed(new Throwable("failed!"))
+    override def findAllByUserId(userId: UserId): Future[Vector[UserThreads]] =
+      Future.failed(UserThreadsRepositoryTestFailedException())
   }
 
-  private val threadsRepositoryCaseSucceeded = new ThreadsRepository {
+  private def threadsRepositoryCaseSucceeded = new ThreadsRepository {
 
     private var database: Vector[models.Thread] = Vector.empty
 
@@ -51,15 +59,19 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
       Future.successful(database.exists(_.id === threadId))
   }
 
-  private val threadsRepositoryCaseFailed = new ThreadsRepository {
+  private def threadsRepositoryCaseFailed = new ThreadsRepository {
 
-    override def save(thread: models.Thread): Future[Int] = Future.failed(new Throwable("failed!"))
+    override def save(thread: models.Thread): Future[Int] =
+      Future.failed(ThreadRepositoryTestFailedException())
 
-    override def findById(threadId: ThreadId): Future[Option[models.Thread]] = Future.failed(new Throwable("failed!"))
+    override def findById(threadId: ThreadId): Future[Option[models.Thread]] =
+      Future.failed(ThreadRepositoryTestFailedException())
 
-    override def findAllByUserId(userId: UserId): Future[Vector[models.Thread]] = Future.failed(new Throwable("failed!"))
+    override def findAllByUserId(userId: UserId): Future[Vector[models.Thread]] =
+      Future.failed(ThreadRepositoryTestFailedException())
 
-    override def existsById(threadId: ThreadId): Future[Boolean] = Future.failed(new Throwable("failed!"))
+    override def existsById(threadId: ThreadId): Future[Boolean] =
+      Future.failed(ThreadRepositoryTestFailedException())
   }
 
   "ThreadUseCase.generateRandomThreadId" should {
@@ -71,7 +83,7 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
       for {
         threadId0 <- threadUseCase.generateRandomThreadId(12)
         threadId1 <- threadUseCase.generateRandomThreadId(12)
-      } yield assert{
+      } yield assert {
         (threadId0 !== threadId1) &&
           (threadId0.value.length === 12 && threadId1.value.length === 12)
       }
@@ -80,6 +92,8 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
     "database error messages can be retrieved." in {
       val threadUseCase =
         new ThreadUseCase(threadsRepositoryCaseFailed, userThreadsRepositoryCaseFailed)
+
+//      recoverToSucceededIf[]
 
       threadUseCase.generateRandomThreadId(12)
         .map(_ => fail())

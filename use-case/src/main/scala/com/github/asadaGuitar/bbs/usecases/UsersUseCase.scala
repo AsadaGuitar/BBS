@@ -56,7 +56,7 @@ final class UsersUseCase(userRepository: UsersRepository)(implicit ec: Execution
     for {
       userOption <- userRepository.findById(userId)
       isValidOption <- userOption.map { user =>
-        Future.fromTry(user.password ?= password)
+        Future.fromTry(user.password.verify(password))
       }.sequence
     } yield {
       for {

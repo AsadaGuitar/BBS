@@ -1,7 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
 import cats.implicits.catsSyntaxEq
-import com.typesafe.config.ConfigFactory
 
 import java.time.Instant
 

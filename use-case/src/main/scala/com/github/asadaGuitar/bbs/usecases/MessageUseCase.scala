@@ -24,7 +24,7 @@ final class MessageUseCase(messagesRepository: MessagesRepository)(implicit ec: 
   def create(createCommand: CreateCommand): Future[MessageId] = {
     val CreateCommand(threadId, userId, text) = createCommand
     for {
-      messageId <- generateRandomMessageId(15)
+      messageId <- generateRandomMessageId(12)
       message = Message(id = messageId, threadId = threadId, userId = userId, text = text)
       _ <- messagesRepository.save(message)
     } yield messageId

@@ -9,7 +9,9 @@ import scala.concurrent.Future
 
 final class MessageUseCaseSpec extends AsyncWordSpec {
 
-  private val messagesRepositoryCaseSucceeded: MessagesRepository = new MessagesRepository {
+  final case class MessageRepositoryTestFailedException() extends Throwable
+
+  private def messagesRepositoryCaseSucceeded: MessagesRepository = new MessagesRepository {
 
     private var database: Vector[Message] = Vector.empty
 
@@ -27,14 +29,16 @@ final class MessageUseCaseSpec extends AsyncWordSpec {
     }
   }
 
-  private val messagesRepositoryCaseFailed: MessagesRepository = new MessagesRepository {
+  private def messagesRepositoryCaseFailed: MessagesRepository = new MessagesRepository {
 
-    override def save(message: Message): Future[Int] = Future.failed(new Throwable("failed!"))
+    override def save(message: Message): Future[Int] =
+      Future.failed(MessageRepositoryTestFailedException())
 
     override def findAllByThreadId(threadId: ThreadId): Future[Vector[Message]] =
-      Future.failed(new Throwable("failed!"))
+      Future.failed(MessageRepositoryTestFailedException())
 
-    override def existsById(messageId: MessageId): Future[Boolean] = Future.failed(new Throwable("failed!"))
+    override def existsById(messageId: MessageId): Future[Boolean] =
+      Future.failed(MessageRepositoryTestFailedException())
   }
 
   "MessagesUseCase.generateRandomMessageId" should {
@@ -42,32 +46,32 @@ final class MessageUseCaseSpec extends AsyncWordSpec {
     "generate a random ID of the requested length." in {
       val messageUseCase = new MessageUseCase(messagesRepositoryCaseSucceeded)
       for {
-        messageId0 <- messageUseCase.generateRandomMessageId(15)
-        messageId1 <- messageUseCase.generateRandomMessageId(15)
+        messageId0 <- messageUseCase.generateRandomMessageId(12)
+        messageId1 <- messageUseCase.generateRandomMessageId(12)
       } yield assert{
         (messageId0.value !== messageId1.value) &&
-          (messageId1.value.length === 15 && messageId0.value.length === 15)
+          (messageId1.value.length === 12 && messageId0.value.length === 12)
       }
     }
 
     "database error messages can be retrieved." in {
-      new MessageUseCase(messagesRepositoryCaseFailed)
-        .generateRandomMessageId(15)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[MessageRepositoryTestFailedException] {
+        new MessageUseCase(messagesRepositoryCaseFailed)
+          .generateRandomMessageId(12)
+      }
     }
   }
 
   "MessageUseCase.create" should {
 
-    val createCommand =
-      MessageUseCase.CreateCommand(
-        threadId = ThreadId("THREAD000001"),
-        userId = UserId("USER000001"),
-        text = MessageText("TEST"))
-
     "returning random message id." in {
       val messageUseCase = new MessageUseCase(messagesRepositoryCaseSucceeded)
+      val createCommand =
+        MessageUseCase.CreateCommand(
+          threadId = ThreadId(Utils.generateRandomString(12)),
+          userId = UserId(Utils.generateRandomString(12)),
+          text = MessageText(Utils.generateRandomString(8)))
+
       for {
         m0 <- messageUseCase.create(createCommand)
         m1 <- messageUseCase.create(createCommand)
@@ -75,20 +79,26 @@ final class MessageUseCaseSpec extends AsyncWordSpec {
     }
 
     "database error messages can be retrieved." in {
-      new MessageUseCase(messagesRepositoryCaseFailed)
-        .create(createCommand)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      val createCommand =
+        MessageUseCase.CreateCommand(
+          threadId = ThreadId(Utils.generateRandomString(12)),
+          userId = UserId(Utils.generateRandomString(12)),
+          text = MessageText(Utils.generateRandomString(8)))
+
+      recoverToSucceededIf[MessageRepositoryTestFailedException] {
+        new MessageUseCase(messagesRepositoryCaseFailed)
+          .create(createCommand)
+      }
     }
   }
 
   "MessageUseCase.findAllByThreadId" should {
 
     "database error messages can be retrieved." in {
-      new MessageUseCase(messagesRepositoryCaseFailed)
-        .findAllByThreadId(ThreadId("TESTCOMMAND"))
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[MessageRepositoryTestFailedException] {
+        new MessageUseCase(messagesRepositoryCaseFailed)
+          .findAllByThreadId(ThreadId(Utils.generateRandomString(12)))
+      }
     }
   }
 
@@ -98,20 +108,20 @@ final class MessageUseCaseSpec extends AsyncWordSpec {
 
       val messageUseCase = new MessageUseCase(messagesRepositoryCaseSucceeded)
 
-      val threadId0 = ThreadId("THREAD000001")
-      val threadId1 = ThreadId("THREAD000002")
+      val threadId0 = ThreadId(Utils.generateRandomString(12))
+      val threadId1 = ThreadId(Utils.generateRandomString(12))
 
       val createCommand0 =
         MessageUseCase.CreateCommand(
           threadId = threadId0,
-          userId = UserId("USER000002"),
-          text = MessageText("TEST"))
+          userId = UserId(Utils.generateRandomString(12)),
+          text = MessageText(Utils.generateRandomString(8)))
 
       val createCommand1 =
         MessageUseCase.CreateCommand(
           threadId = threadId1,
-          userId = UserId("USER000003"),
-          text = MessageText("TEST"))
+          userId = UserId(Utils.generateRandomString(12)),
+          text = MessageText(Utils.generateRandomString(8)))
 
       for {
         _ <- messageUseCase.create(createCommand0)
