@@ -1,24 +1,9 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
-  ErrorListResponse,
-  ErrorResponse,
-  FindMessageByThreadIdSucceededResponse,
-  FindThreadByUserIdSucceededResponse,
-  FindUserByIdSucceededResponse,
-  PostMessageRequest,
-  PostMessageSucceededResponse,
-  PostThreadRequest,
-  PostThreadSucceededResponse,
-  SigninRequest,
-  SigninSucceededResponse,
-  SignupRequest,
-  SignupSucceededResponse,
-  UserIdRequest
-}
-import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, Jwt, UserId, UserName, UserPassword }
-import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
+import com.github.asadaGuitar.bbs.interfaces.controllers.models.{ErrorListResponse, ErrorResponse, FindMessageByThreadIdSucceededResponse, FindThreadByUserIdSucceededResponse, FindUserByIdSucceededResponse, PostMessageRequest, PostMessageSucceededResponse, PostThreadRequest, PostThreadSucceededResponse, SigninRequest, SigninSucceededResponse, SignupRequest, SignupSucceededResponse, UserIdRequest}
+import com.github.asadaGuitar.bbs.domains.models.{BcryptedPassword, EmailAddress, Jwt, PlainPassword, UserId, UserName, UserPassword}
+import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
@@ -26,7 +11,9 @@ trait Marshaller extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val userNameMarshaller: RootJsonFormat[UserName] = jsonFormat1(UserName)
 
-  implicit val userPasswordMarshaller: RootJsonFormat[UserPassword] = jsonFormat1(UserPassword)
+  implicit val plainPasswordMarshaller: RootJsonFormat[PlainPassword] = jsonFormat1(PlainPassword.apply)
+
+  implicit val bcryptedPasswordMarshaller: RootJsonFormat[BcryptedPassword] = jsonFormat1(BcryptedPassword)
 
   implicit val emailAddressMarshaller: RootJsonFormat[EmailAddress] = jsonFormat1(EmailAddress.apply)
 

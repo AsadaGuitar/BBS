@@ -1,8 +1,7 @@
 package com.github.asadaGuitar.bbs.usecases
 
 import com.github.asadaGuitar.bbs.domains.models.{Message, MessageId, MessageText, ThreadId, UserId}
-import com.github.asadaGuitar.bbs.repositories.MessagesRepository
-import org.scalatest.exceptions.TestFailedException
+import com.github.asadaGuitar.bbs.domains.repositories.MessagesRepository
 import org.scalatest.wordspec.AsyncWordSpec
 
 import scala.concurrent.Future
@@ -22,10 +21,10 @@ final class MessageUseCaseSpec extends AsyncWordSpec {
       }
 
     override def findAllByThreadId(threadId: ThreadId): Future[Vector[Message]] =
-      Future.successful(database.filter(_.threadId.value === threadId.value))
+      Future.successful(database.filter(_.threadId.value == threadId.value))
 
     override def existsById(messageId: MessageId): Future[Boolean] = {
-      Future(database.exists(_.id.value === messageId.value))
+      Future(database.exists(_.id.value == messageId.value))
     }
   }
 

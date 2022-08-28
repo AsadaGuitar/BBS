@@ -1,11 +1,11 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
 import com.github.asadaGuitar.bbs.domains.models
-import com.github.asadaGuitar.bbs.domains.models.{ Message, MessageId, MessageText, ThreadId, UserId }
+import com.github.asadaGuitar.bbs.domains.models.{Message, MessageId, MessageText, ThreadId, UserId}
+import com.github.asadaGuitar.bbs.domains.repositories.MessagesRepository
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
-import com.github.asadaGuitar.bbs.repositories.MessagesRepository
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
     extends MessagesRepository
@@ -17,7 +17,7 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
   override def save(message: Message): Future[Int] = {
     val Message(id, threadId, userId, text, isClose, createAt, modifyAt, closeAt) = message
     this.existsById(id).flatMap {
-      case true =>
+      case false =>
         dbConfig.db.run {
           Tables.Messages.insertOrUpdate {
             Tables.MessagesRow(
@@ -32,7 +32,7 @@ final class SlickMessagesRepositoryImpl(implicit ec: ExecutionContext)
             )
           }
         }
-      case false =>
+      case true =>
         Future.failed(new SlickException(s"message id already exists. ${message.id.value}"))
     }
   }

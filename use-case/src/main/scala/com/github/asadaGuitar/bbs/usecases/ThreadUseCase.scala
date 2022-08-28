@@ -1,10 +1,10 @@
 package com.github.asadaGuitar.bbs.usecases
 
 import cats.implicits.toTraverseOps
-import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, ThreadTitle, UserId, UserThreads }
-import com.github.asadaGuitar.bbs.repositories.{ ThreadsRepository, UserThreadsRepository }
+import com.github.asadaGuitar.bbs.domains.models.{Thread, ThreadId, ThreadTitle, UserId, UserThreads}
+import com.github.asadaGuitar.bbs.domains.repositories.{ThreadsRepository, UserThreadsRepository}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 object ThreadUseCase {

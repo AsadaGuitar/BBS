@@ -1,7 +1,7 @@
 package com.github.asadaGuitar.bbs.usecases
 
 import com.github.asadaGuitar.bbs.domains.models.{ Message, MessageId, MessageText, ThreadId, UserId }
-import com.github.asadaGuitar.bbs.repositories.MessagesRepository
+import com.github.asadaGuitar.bbs.domains.repositories.MessagesRepository
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Random

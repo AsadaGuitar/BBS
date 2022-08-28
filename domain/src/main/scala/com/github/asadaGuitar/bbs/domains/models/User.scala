@@ -1,9 +1,6 @@
 package com.github.asadaGuitar.bbs.domains.models
 
-import cats.implicits.catsSyntaxEq
-
 import java.time.Instant
-import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 final case class User(id: UserId,
@@ -16,51 +13,38 @@ final case class User(id: UserId,
                       modifyAt: Option[Instant] = None,
                       closeAt: Option[Instant] = None)
 
-object UserId {
-
-  def matches(value: String): Boolean = 12 === value.length
-}
-
 final case class UserId(value: String) {
 
-  import UserId._
-
-  require(matches(value))
-}
-
-object UserName {
-
-  def matches(value: String): Boolean = 2 <= value.length && value.length <= 50
+  require(12 == value.length)
 }
 
 final case class UserName(value: String) {
 
-  import UserName._
-
-  require(matches(value))
+  require(2 <= value.length && value.length <= 50)
 }
 
-object UserPassword {
-
-  def matches(value: String): Boolean = "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)[a-zA-Z\\d]{8,100}$".r.matches(value)
+sealed trait UserPassword {
+  def value: String
 }
 
-final case class UserPassword(plain: String) {
+final case class BcryptedPassword(value: String) extends UserPassword {
 
-  import UserPassword._
   import com.github.t3hnar.bcrypt._
 
-  require(matches(plain))
+  def verify(plain: PlainPassword): Try[Boolean] =
+    plain.value.isBcryptedSafeBounded(value)
+}
 
-  val crypted: Try[String] = plain.bcryptSafeBounded
+object PlainPassword {
+  private val pattern = "^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\\d)[a-zA-Z\\d]{8,100}$".r
+}
 
-  def verify(other: UserPassword)(implicit ec: ExecutionContext): Try[Boolean] =
-    this.crypted.flatMap {
-      other.plain.isBcryptedSafeBounded
-    }
+final case class PlainPassword(value: String) extends UserPassword {
 
-  def verify(plain: String)(implicit ec: ExecutionContext): Try[Boolean] =
-    this.crypted.flatMap {
-      plain.isBcryptedSafeBounded
-    }
+  import PlainPassword._
+  import com.github.t3hnar.bcrypt._
+
+  require(pattern.matches(value))
+
+  def bcryptSafeBounded: Try[BcryptedPassword] = value.bcryptSafeBounded.map(BcryptedPassword)
 }

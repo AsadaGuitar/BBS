@@ -1,26 +1,10 @@
 package com.github.asadaGuitar.bbs.interfaces.controllers.validations
 
 import cats.data.ValidatedNel
-import cats.implicits.{ catsSyntaxTuple2Semigroupal, catsSyntaxTuple4Semigroupal, catsSyntaxValidatedId, toTraverseOps }
-import com.github.asadaGuitar.bbs.interfaces.controllers.models.{
-  ErrorResponse,
-  PostMessageRequest,
-  PostThreadFormWithoutUserId,
-  PostThreadRequest,
-  SigninRequest,
-  SignupRequest,
-  UserIdRequest
-}
-import com.github.asadaGuitar.bbs.domains.models.{
-  EmailAddress,
-  MessageText,
-  ThreadId,
-  ThreadTitle,
-  UserId,
-  UserName,
-  UserPassword
-}
-import com.github.asadaGuitar.bbs.usecases.UsersUseCase.{ SigninCommand, SignupCommand }
+import cats.implicits.{catsSyntaxTuple2Semigroupal, catsSyntaxTuple4Semigroupal, catsSyntaxValidatedId, toTraverseOps}
+import com.github.asadaGuitar.bbs.interfaces.controllers.models.{ErrorResponse, PostMessageRequest, PostThreadFormWithoutUserId, PostThreadRequest, SigninRequest, SignupRequest, UserIdRequest}
+import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, MessageText, PlainPassword, ThreadId, ThreadTitle, UserId, UserName}
+import com.github.asadaGuitar.bbs.usecases.UsersUseCase.{SigninCommand, SignupCommand}
 
 object Validations {
 
@@ -72,9 +56,9 @@ object Validations {
         ErrorResponse.emailAddressValidationError.invalidNel
     }
 
-  def validateUserPassword(value: String): ValidatedNel[ErrorResponse, UserPassword] =
+  def validateUserPassword(value: String): ValidatedNel[ErrorResponse, PlainPassword] =
     try {
-      UserPassword(value).validNel
+      PlainPassword(value).validNel
     } catch {
       case _: IllegalArgumentException =>
         ErrorResponse.userPasswordValidationError.invalidNel

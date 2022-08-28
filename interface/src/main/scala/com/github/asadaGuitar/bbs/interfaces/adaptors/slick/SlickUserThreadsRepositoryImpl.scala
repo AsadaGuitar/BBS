@@ -1,10 +1,10 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
-import com.github.asadaGuitar.bbs.domains.models.{ ThreadId, UserId, UserThreads, UserThreadsId }
+import com.github.asadaGuitar.bbs.domains.models.{ThreadId, UserId, UserThreads, UserThreadsId}
+import com.github.asadaGuitar.bbs.domains.repositories.UserThreadsRepository
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
-import com.github.asadaGuitar.bbs.repositories.UserThreadsRepository
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 final class SlickUserThreadsRepositoryImpl(implicit ec: ExecutionContext)
     extends UserThreadsRepository

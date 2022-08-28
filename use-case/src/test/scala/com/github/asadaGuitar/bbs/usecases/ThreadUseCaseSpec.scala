@@ -2,19 +2,18 @@ package com.github.asadaGuitar.bbs.usecases
 
 import com.github.asadaGuitar.bbs.domains.models
 import com.github.asadaGuitar.bbs.domains.models.{ThreadId, ThreadTitle, UserId, UserThreads}
-import com.github.asadaGuitar.bbs.repositories.{ThreadsRepository, UserThreadsRepository}
-import org.scalatest.exceptions.TestFailedException
+import com.github.asadaGuitar.bbs.domains.repositories.{ThreadsRepository, UserThreadsRepository}
 import org.scalatest.wordspec.AsyncWordSpec
 
 import scala.concurrent.Future
 
 final class ThreadUseCaseSpec extends AsyncWordSpec {
 
-  trait ThreadUseCaseSpecException extends Throwable
+  trait ThreadUseCaseTestException extends Throwable
 
-  final case class UserThreadsRepositoryTestFailedException() extends ThreadUseCaseSpecException
+  final case class UserThreadsRepositoryTestFailedException() extends ThreadUseCaseTestException
 
-  final case class ThreadRepositoryTestFailedException() extends ThreadUseCaseSpecException
+  final case class ThreadRepositoryTestFailedException() extends ThreadUseCaseTestException
 
   private def userThreadsRepositoryCaseSucceeded = new UserThreadsRepository {
 
@@ -93,11 +92,9 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
       val threadUseCase =
         new ThreadUseCase(threadsRepositoryCaseFailed, userThreadsRepositoryCaseFailed)
 
-//      recoverToSucceededIf[]
-
-      threadUseCase.generateRandomThreadId(12)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[ThreadUseCaseTestException] {
+        threadUseCase.generateRandomThreadId(12)
+      }
     }
   }
 
@@ -109,8 +106,8 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
 
       val createCommand =
         ThreadUseCase.CreateCommand(
-          userId = UserId("TEST0001"),
-          title = ThreadTitle("TEST"),
+          userId = UserId(Utils.generateRandomString(12)),
+          title = ThreadTitle(Utils.generateRandomString(12)),
           otherUserIds = List.empty)
 
       for {
@@ -130,47 +127,51 @@ final class ThreadUseCaseSpec extends AsyncWordSpec {
 
       val createCommand =
         ThreadUseCase.CreateCommand(
-          userId = UserId("TEST0001"),
-          title = ThreadTitle("TEST"),
+          userId = UserId(Utils.generateRandomString(12)),
+          title = ThreadTitle(Utils.generateRandomString(8)),
           otherUserIds = List.empty)
 
-      threadUseCase.create(createCommand)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[ThreadUseCaseTestException] {
+        threadUseCase.create(createCommand)
+      }
     }
-  }
 
-  "ThreadUseCase.findAllByUserId" should {
+    "ThreadUseCase.findAllByUserId" should {
 
-    "database error messages can be retrieved." in {
-      val threadUseCase =
-        new ThreadUseCase(threadsRepositoryCaseFailed, userThreadsRepositoryCaseFailed)
+      "database error messages can be retrieved." in {
+        val threadUseCase =
+          new ThreadUseCase(threadsRepositoryCaseFailed, userThreadsRepositoryCaseFailed)
 
-      threadUseCase.findAllByUserId(UserId("TEST0001"))
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
-    }
-  }
-
-  "ThreadUseCase" should {
-    "can create and search messages." in {
-      val threadUseCase =
-        new ThreadUseCase(threadsRepositoryCaseSucceeded, userThreadsRepositoryCaseSucceeded)
-
-      val createCommand =
-        ThreadUseCase.CreateCommand(
-          userId = UserId("TEST0001"),
-          title = ThreadTitle("TEST"),
-          otherUserIds = List.empty)
-
-      for {
-        _ <- {
-          val task = threadUseCase.create(createCommand)
-          Thread.sleep(300)
-          task
+        recoverToSucceededIf[ThreadUseCaseTestException] {
+          val userId = UserId(Utils.generateRandomString(12))
+          threadUseCase.findAllByUserId(userId)
         }
-        thread <- threadUseCase.findAllByUserId(UserId("TEST0001"))
-      } yield assert(thread.exists(_.title === ThreadTitle("TEST")))
+      }
+    }
+
+    "ThreadUseCase" should {
+      "can create and search messages." in {
+        val threadUseCase =
+          new ThreadUseCase(threadsRepositoryCaseSucceeded, userThreadsRepositoryCaseSucceeded)
+
+        val userId = UserId(Utils.generateRandomString(12))
+        val threadTitle = ThreadTitle(Utils.generateRandomString(8))
+
+        val createCommand =
+          ThreadUseCase.CreateCommand(
+            userId = userId,
+            title = threadTitle,
+            otherUserIds = List.empty)
+
+        for {
+          _ <- {
+            val task = threadUseCase.create(createCommand)
+            Thread.sleep(300)
+            task
+          }
+          thread <- threadUseCase.findAllByUserId(userId)
+        } yield assert(thread.exists(_.title === threadTitle))
+      }
     }
   }
 }

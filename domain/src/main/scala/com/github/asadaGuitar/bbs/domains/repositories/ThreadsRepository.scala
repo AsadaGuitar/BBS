@@ -1,6 +1,6 @@
-package com.github.asadaGuitar.bbs.repositories
+package com.github.asadaGuitar.bbs.domains.repositories
 
-import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, UserId }
+import com.github.asadaGuitar.bbs.domains.models.{Thread, ThreadId, UserId}
 
 import scala.concurrent.Future
 

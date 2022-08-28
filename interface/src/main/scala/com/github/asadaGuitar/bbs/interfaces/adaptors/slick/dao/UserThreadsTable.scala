@@ -11,7 +11,7 @@ private[adaptors] trait UserThreadsTable {
   import slick.model.ForeignKeyAction
 
   final case class UserThreadsRow(
-      id: Int,
+      id: Long,
       userId: String,
       threadId: String,
       isClose: Boolean = false,
@@ -22,7 +22,7 @@ private[adaptors] trait UserThreadsTable {
   class UserThreads(_tableTag: Tag) extends profile.api.Table[UserThreadsRow](_tableTag, "user_threads") {
     def * = (id, userId, threadId, isClose, createAt, closeAt) <> (UserThreadsRow.tupled, UserThreadsRow.unapply)
 
-    val id = column[Int]("id", O.AutoInc, O.PrimaryKey)
+    val id = column[Long]("id", O.AutoInc, O.PrimaryKey)
 
     val userId = column[String]("user_id", O.Length(255, varying = true))
 

@@ -1,4 +1,4 @@
-package com.github.asadaGuitar.bbs.domains.models
+package com.github.asadaGuitar.bbs.interfaces
 
 import scala.util.Random
 

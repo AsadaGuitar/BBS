@@ -1,13 +1,12 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
 import cats.Functor
-import com.github.asadaGuitar.bbs.domains.models.{ Thread, ThreadId, ThreadTitle, UserId }
+import com.github.asadaGuitar.bbs.domains.models.{Thread, ThreadId, ThreadTitle, UserId}
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
-import com.github.asadaGuitar.bbs.repositories.ThreadsRepository
-
 import cats.implicits._
+import com.github.asadaGuitar.bbs.domains.repositories.ThreadsRepository
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 final class SlickThreadsRepositoryImpl(implicit ec: ExecutionContext)
     extends ThreadsRepository

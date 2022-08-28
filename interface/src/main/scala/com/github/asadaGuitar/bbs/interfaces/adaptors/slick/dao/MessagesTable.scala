@@ -43,5 +43,5 @@ private[adaptors] trait MessagesTable {
     val closeAt = column[Option[Timestamp]]("close_at")
   }
 
-  lazy val Messages = new TableQuery(tag => new Messages(tag))
+  lazy val Messages = new TableQuery(new Messages(_))
 }

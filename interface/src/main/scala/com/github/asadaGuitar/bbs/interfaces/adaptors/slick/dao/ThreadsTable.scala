@@ -32,9 +32,9 @@ private[adaptors] trait ThreadsTable {
 
     val createAt = column[java.sql.Timestamp]("create_at")
 
-    val modifyAt = column[Option[java.sql.Timestamp]]("modify_at", O.Default(None))
+    val modifyAt = column[Option[java.sql.Timestamp]]("modify_at")
 
-    val closeAt = column[Option[java.sql.Timestamp]]("close_at", O.Default(None))
+    val closeAt = column[Option[java.sql.Timestamp]]("close_at")
 
     lazy val usersFk = foreignKey("threads_user_id", userId, Users)(
       r => r.id,

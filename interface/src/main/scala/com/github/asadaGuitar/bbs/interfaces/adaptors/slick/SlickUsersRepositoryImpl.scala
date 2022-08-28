@@ -1,10 +1,10 @@
 package com.github.asadaGuitar.bbs.interfaces.adaptors.slick
 
-import com.github.asadaGuitar.bbs.domains.models.{ EmailAddress, User, UserId, UserName, UserPassword }
+import com.github.asadaGuitar.bbs.domains.models.{BcryptedPassword, EmailAddress, PlainPassword, User, UserId, UserName}
+import com.github.asadaGuitar.bbs.domains.repositories.UsersRepository
 import com.github.asadaGuitar.bbs.interfaces.adaptors.slick.dao.Tables
-import com.github.asadaGuitar.bbs.repositories.UsersRepository
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext)
     extends SlickDbConfigProvider
@@ -14,23 +14,19 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext)
   import dbConfig.profile.api._
 
   override def save(user: User): Future[Int] = {
-    val User(id, emailAddress, firstName, lastName, password, isClose, createAt, modifyAt, closeAt) = user
-    Future.fromTry(password.crypted).flatMap { crypted =>
-      dbConfig.db.run {
-        Tables.Users
-          .insertOrUpdate(
-            Tables.UsersRow(
-              id = id.value,
-              firstName = firstName.value,
-              lastName = lastName.value,
-              emailAddress = emailAddress.value,
-              password = crypted,
-              isClose = isClose,
-              createAt = createAt,
-              modifyAt = modifyAt,
-              closeAt = closeAt
-            )
-          )
+    val User(id, firstName, lastName, emailAddress, password, isClose, createAt, modifyAt, closeAt) = user
+    dbConfig.db.run{
+      Tables.Users.insertOrUpdate{
+        Tables.UsersRow(
+          id = id.value,
+          firstName = firstName.value,
+          lastName = lastName.value,
+          emailAddress = emailAddress.value,
+          password = password.value,
+          isClose = isClose,
+          createAt = createAt,
+          modifyAt = modifyAt,
+          closeAt = closeAt)
       }
     }
   }
@@ -60,7 +56,7 @@ final class SlickUsersRepositoryImpl(implicit ec: ExecutionContext)
         firstName = UserName(first_name),
         lastName = UserName(last_name),
         emailAddress = EmailAddress(email_address),
-        password = UserPassword(password),
+        password = BcryptedPassword(password),
         isClose = is_close,
         createAt = create_at,
         modifyAt = modify_at,

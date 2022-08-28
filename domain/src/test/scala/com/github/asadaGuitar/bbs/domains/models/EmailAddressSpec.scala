@@ -25,19 +25,4 @@ final class EmailAddressSpec extends AnyWordSpec {
       }
     }
   }
-
-  "EmailAddress.matches" should {
-
-    "succeeds when the value is email address." in {
-      assert(EmailAddress.matches("info@sample.com"))
-    }
-
-    "fails on invalid values." in {
-      assert(!EmailAddress.matches("test"))
-    }
-
-    "fails on empty values." in {
-      assert(!EmailAddress.matches(""))
-    }
-  }
 }

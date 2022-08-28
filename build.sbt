@@ -50,20 +50,20 @@ lazy val domain = (project in file("domain"))
     )
   )
 
-lazy val repository = (project in file("repository"))
-  .settings(baseSettings)
-  .settings(
-    name := "bbs-repository",
-    libraryDependencies ++= Seq(
-      "org.typelevel"      %% "cats-core"       % catsCoreVersion,
-      "com.typesafe.slick" %% "slick"           % slickVersion,
-      "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion,
-      "org.postgresql"      % "postgresql"      % postgresVersion,
-      "ch.qos.logback"      % "logback-classic" % logbackVersion,
-      "org.scalatest"      %% "scalatest"       % scalaTestVersion % Test
-    )
-  )
-  .dependsOn(domain)
+//lazy val repository = (project in file("repository"))
+//  .settings(baseSettings)
+//  .settings(
+//    name := "bbs-repository",
+//    libraryDependencies ++= Seq(
+//      "org.typelevel"      %% "cats-core"       % catsCoreVersion,
+//      "com.typesafe.slick" %% "slick"           % slickVersion,
+//      "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion,
+//      "org.postgresql"      % "postgresql"      % postgresVersion,
+//      "ch.qos.logback"      % "logback-classic" % logbackVersion,
+//      "org.scalatest"      %% "scalatest"       % scalaTestVersion % Test
+//    )
+//  )
+//  .dependsOn(domain)
 
 lazy val usecase = (project in file("use-case"))
   .settings(baseSettings)
@@ -76,7 +76,7 @@ lazy val usecase = (project in file("use-case"))
       "org.scalatest"     %% "scalatest"       % scalaTestVersion % Test
     )
   )
-  .dependsOn(repository)
+  .dependsOn(domain)
 
 lazy val interface = (project in file("interface"))
   .settings(baseSettings)
@@ -138,7 +138,7 @@ lazy val root = (project in file("."))
     name := "bbs-root",
     publish / skip := true
   )
-  .aggregate(domain, interface, repository, api)
+  .aggregate(domain, interface, api)
 
 addCommandAlias("lint", ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck;scalafixAll --check")
 addCommandAlias("fmt", ";scalafmtAll;scalafmtSbt;scalafix RemoveUnused")

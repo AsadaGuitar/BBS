@@ -6,14 +6,14 @@ import java.time.Instant
 trait DbColumnsConvertor {
 
   implicit val convertTimestampToInstant: Timestamp => Instant =
-    timestamp => Instant.ofEpochMilli(timestamp.getTime)
+    timestamp => timestamp.toInstant
 
   implicit val convertInstantToTimestamp: Instant => Timestamp =
-    instant => new Timestamp(instant.toEpochMilli)
+    instant => Timestamp.from(instant)
 
   implicit val convertTimestampToInstantOption: Option[Timestamp] => Option[Instant] =
-    timestamp => timestamp.map(ts => Instant.ofEpochMilli(ts.getTime))
+    timestamp => timestamp.map(_.toInstant)
 
   implicit val convertInstantToTimestampOption: Option[Instant] => Option[Timestamp] =
-    instant => instant.map(i => new Timestamp(i.toEpochMilli))
+    instant => instant.map(Timestamp.from)
 }

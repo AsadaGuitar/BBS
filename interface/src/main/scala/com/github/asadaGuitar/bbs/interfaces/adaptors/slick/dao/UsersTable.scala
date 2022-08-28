@@ -48,9 +48,9 @@ private[adaptors] trait UsersTable {
 
     val createAt = column[Timestamp]("create_at")
 
-    val modifyAt = column[Option[Timestamp]]("modify_at", O.Default(None))
+    val modifyAt = column[Option[Timestamp]]("modify_at")
 
-    val closeAt = column[Option[Timestamp]]("close_at", O.Default(None))
+    val closeAt = column[Option[Timestamp]]("close_at")
   }
 
   lazy val Users = new TableQuery(new Users(_))

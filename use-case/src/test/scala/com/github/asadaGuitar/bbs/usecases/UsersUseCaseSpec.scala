@@ -1,8 +1,8 @@
 package com.github.asadaGuitar.bbs.usecases
 
-import com.github.asadaGuitar.bbs.domains.models.{EmailAddress, Jwt, User, UserId, UserName, UserPassword}
-import com.github.asadaGuitar.bbs.repositories.UsersRepository
-import org.scalatest.exceptions.TestFailedException
+import cats.implicits.catsSyntaxFlatMapOps
+import com.github.asadaGuitar.bbs.domains.models.{BcryptedPassword, EmailAddress, Jwt, PlainPassword, User, UserId, UserName}
+import com.github.asadaGuitar.bbs.domains.repositories.UsersRepository
 import org.scalatest.wordspec.AsyncWordSpec
 
 import java.time.Instant
@@ -10,12 +10,14 @@ import scala.concurrent.Future
 
 final class UsersUseCaseSpec extends AsyncWordSpec {
 
+  final case class UsersRepositoryTestFailedException() extends Throwable
+
   private def usersRepositoryCaseSucceeded: UsersRepository = new UsersRepository {
 
     var database: Vector[User] = Vector.empty
 
     override def save(user: User): Future[Int] =
-      Future.successful{
+      Future.successful {
         database.foreach(println)
         database = database :+ user
         1
@@ -33,13 +35,13 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
 
   private def usersRepositoryCaseFailed: UsersRepository = new UsersRepository {
 
-    override def save(user: User): Future[Int] = Future.failed(new Throwable("failed!"))
+    override def save(user: User): Future[Int] = Future.failed(UsersRepositoryTestFailedException())
 
-    override def findById(userId: UserId): Future[Option[User]] = Future.failed(new Throwable("failed!"))
+    override def findById(userId: UserId): Future[Option[User]] = Future.failed(UsersRepositoryTestFailedException())
 
-    override def existsById(userId: UserId): Future[Boolean] = Future.failed(new Throwable("failed!"))
+    override def existsById(userId: UserId): Future[Boolean] = Future.failed(UsersRepositoryTestFailedException())
 
-    override def existsByEmailAddress(mailAddress: EmailAddress): Future[Boolean] = Future.failed(new Throwable("failed!"))
+    override def existsByEmailAddress(mailAddress: EmailAddress): Future[Boolean] = Future.failed(UsersRepositoryTestFailedException())
   }
 
   "UsersUseCase.generateRandomUserId" should {
@@ -49,17 +51,17 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
       for {
         userId0 <- usersUseCase.generateRandomUserId(12)
         userId1 <- usersUseCase.generateRandomUserId(12)
-      } yield assert{
+      } yield assert {
         (userId0 !== userId1) &&
           (userId0.value.length === 12 && userId1.value.length === 12)
       }
     }
 
     "can return IO error." in {
-      new UsersUseCase(usersRepositoryCaseFailed)
-        .generateRandomUserId(12)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[UsersRepositoryTestFailedException] {
+        new UsersUseCase(usersRepositoryCaseFailed)
+          .generateRandomUserId(12)
+      }
     }
   }
 
@@ -74,19 +76,19 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
           emailAddress = EmailAddress("testAddress0@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = PlainPassword("Passw0rd"))
 
       val signupCommand1 =
         UsersUseCase.SignupCommand(
           emailAddress = EmailAddress("testAddress1@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = PlainPassword("Passw0rd"))
 
       for {
         userId0 <- usersUseCase.signup(signupCommand0)
         userId1 <- usersUseCase.signup(signupCommand1)
-      } yield assert{
+      } yield assert {
         (userId0 !== userId1) &&
           (userId0.value.length === 12 && userId1.value.length === 12)
       }
@@ -100,21 +102,19 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
           emailAddress = EmailAddress("testAddress@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = PlainPassword("Passw0rd"))
 
       val signupCommand1 =
         UsersUseCase.SignupCommand(
           emailAddress = EmailAddress("testAddress@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = PlainPassword("Passw0rd"))
 
-      val task = for {
-        _ <- usersUseCase.signup(signupCommand0)
-        _ <- usersUseCase.signup(signupCommand1)
-      } yield fail()
-
-      task.recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[IllegalArgumentException] {
+        usersUseCase.signup(signupCommand0) >>
+          usersUseCase.signup(signupCommand1)
+      }
     }
 
     "can return IO error." in {
@@ -123,12 +123,12 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
           emailAddress = EmailAddress("testEmailAddress@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = PlainPassword("Passw0rd"))
 
-      new UsersUseCase(usersRepositoryCaseFailed)
-        .signup(signupCommand)
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[UsersRepositoryTestFailedException] {
+        new UsersUseCase(usersRepositoryCaseFailed)
+          .signup(signupCommand)
+      }
     }
   }
 
@@ -137,27 +137,27 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
     "can return IO error." in {
       val signinCommand =
         UsersUseCase.SigninCommand(
-          userId = UserId("TEST00001"),
-          password = UserPassword("TEST"))
+          userId = UserId(Utils.generateRandomString(12)),
+          plainPassword = PlainPassword("Passw0rd"))
 
-      new UsersUseCase(usersRepositoryCaseFailed)
-        .signin(signinCommand)(_ => Jwt(
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-            "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
-            "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
-        ))
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[UsersRepositoryTestFailedException] {
+        new UsersUseCase(usersRepositoryCaseFailed)
+          .signin(signinCommand)(_ => Jwt(
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+              "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
+              "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+          ))
+      }
     }
   }
 
   "UsersUseCase.findById" should {
 
     "can return IO error." in {
-      new UsersUseCase(usersRepositoryCaseFailed)
-        .findById(UserId("testUserId"))
-        .map(_ => fail())
-        .recover(e => assert(!e.isInstanceOf[TestFailedException]))
+      recoverToSucceededIf[UsersRepositoryTestFailedException] {
+        new UsersUseCase(usersRepositoryCaseFailed)
+          .findById(UserId(Utils.generateRandomString(12)))
+      }
     }
   }
 
@@ -165,18 +165,19 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
 
     "can signin after creating a user." in {
       val usersUseCase = new UsersUseCase(usersRepositoryCaseSucceeded)
+      val plainPassword = PlainPassword("Passw0rd")
 
       val signupCommand =
         UsersUseCase.SignupCommand(
           emailAddress = EmailAddress("testEmailAddress@test.com"),
           firstName = UserName("testFirstName"),
           lastName = UserName("testLastName"),
-          password = UserPassword("testPassword"))
+          plainPassword = plainPassword)
 
       for {
         userId <- usersUseCase.signup(signupCommand)
         user <- usersUseCase.signin(
-          UsersUseCase.SigninCommand(userId, UserPassword("testPassword"))
+          UsersUseCase.SigninCommand(userId, plainPassword)
         )(_ => Jwt(
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
             "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9." +
@@ -191,16 +192,16 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
       val testEmailAddress = EmailAddress("testEmailAddress@test.com")
       val testFirstName = UserName("testFirstName")
       val testLastName = UserName("testLastName")
-      val testPassword = UserPassword("testPassword")
+      val testPassword = PlainPassword("Passw0rd")
 
       val signupCommand =
         UsersUseCase.SignupCommand(
           emailAddress = testEmailAddress,
           firstName = testFirstName,
           lastName = testLastName,
-          password = testPassword)
+          plainPassword = testPassword)
 
-      val userWithUserId = for {
+      val userWithUserId: Future[(User, UserId)] = for {
         userId <- usersUseCase.signup(signupCommand)
         user <- usersUseCase.findById(userId)
       } yield user match {
@@ -212,22 +213,24 @@ final class UsersUseCaseSpec extends AsyncWordSpec {
         case (user, userId) =>
           val User(id, firstName, lastName, emailAddress, password, isClose, createAt, modifyAt, closeAt) = user
           val afterCreatTime = Instant.now()
-          Future.fromTry{
-            password.verify(testPassword)
-          }.map { isValid =>
-            assert{
-              (id === userId) &&
-                (firstName === testFirstName) &&
-                (lastName === testLastName) &&
-                (emailAddress === testEmailAddress) &&
-                isValid &&
-                (!isClose) &&
-                createAt.isBefore(afterCreatTime) &&
-                modifyAt.isEmpty &&
-                closeAt.isEmpty
-            }
+          password match {
+            case bcryptedPassword@BcryptedPassword(_) =>
+              Future.fromTry(bcryptedPassword.verify(testPassword))
+                .map { isValid =>
+                  assert {
+                    (id === userId) &&
+                      (firstName === testFirstName) &&
+                      (lastName === testLastName) &&
+                      (emailAddress === testEmailAddress) &&
+                      isValid &&
+                      (!isClose) &&
+                      createAt.isBefore(afterCreatTime) &&
+                      modifyAt.isEmpty &&
+                      closeAt.isEmpty
+                  }
+                }
+            case _ => fail()
           }
-        case _ => fail()
       }
     }
   }
