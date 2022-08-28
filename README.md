@@ -17,18 +17,16 @@ This is a bulletin board application for exchanging messages on threads.
 ### Diagram
 ```mermaid
 classDiagram
-    DomainLayer <|-- RepositoryLayer
-    RepositoryLayer <|-- UseCaseLayer
+    DomainLayer <|-- UseCaseLayer
     UseCaseLayer <|-- InterfaceLayer
     InterfaceLayer <|-- ApiLayer
 ```
 ### Domain Layer
-The domain is the group of data central to the application.
+Provides entities.
 + [User](https://github.com/AsadaGuitar/BBS/blob/master/domain/src/main/scala/com/github/asadaGuitar/bbs/domains/models/User.scala)
 + [Thread](https://github.com/AsadaGuitar/BBS/blob/master/domain/src/main/scala/com/github/asadaGuitar/bbs/domains/models/Thread.scala)
 + [Message](https://github.com/AsadaGuitar/BBS/blob/master/domain/src/main/scala/com/github/asadaGuitar/bbs/domains/models/Message.scala)
 
-### Repository Layer
 Provides abstracted repositories.
 + [UsersRepository](https://github.com/AsadaGuitar/BBS/blob/master/repository/src/main/scala/com/github/asadaGuitar/bbs/repositories/UsersRepository.scala)
 + [ThreadsRepository](https://github.com/AsadaGuitar/BBS/blob/master/repository/src/main/scala/com/github/asadaGuitar/bbs/repositories/ThreadsRepository.scala)
